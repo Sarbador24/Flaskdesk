@@ -1,0 +1,82 @@
+<div class="sidebar sidebar-lighten">
+  <!-- Sidebar menu -->
+  <div class="sidebar-menu">
+    <!-- Menu -->
+    <ul class="list list-unstyled list-scrollbar">
+      <!-- Multi-level dropdown menu -->
+      <li class="list-item">
+        <p class="list-title text-uppercase">Support Ticket</p>
+        <ul class="list-unstyled">
+          <li>
+            <a href="{{ url_for('admin.dashboard') }}" class="list-link">
+              <span class="list-icon">
+                <i class="fa fa-home" aria-hidden="true"></i>
+              </span>Dashboard
+            </a>
+          </li>
+          <li>
+            <a href="javascript:void(0)" class="list-link link-arrow link-current">
+              <span class="list-icon">
+                <i class="fa fa-cog" aria-hidden="true"></i>
+              </span>Administrator
+            </a>
+            <ul class="list-unstyled list-hidden">
+              <li>
+                <a href="#" class="list-link">Tickets</a>
+              </li>
+              <li>
+                <a href="#" class="list-link">Custom replies</a>
+              </li>
+              <li>
+                <a href="javascript:void(0)" class="list-link link-arrow link-current">General</a>
+                <ul class="list-unstyled list-hidden">
+                  <li>
+                    <a href="{{ url_for('admin.category') }}" class="list-link">Categories</a>
+                  </li>
+                  <li>
+                    <a href="{{ url_for('admin.priority') }}" class="list-link">Priorities</a>
+                  </li>
+                  <li>
+                    <a href="{{ url_for('admin.status') }}" class="list-link">Statuses</a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+          <!-- User management -->
+          <li>
+            <a href="#" class="list-link">
+              <span class="list-icon">
+                <i class="fa fa-users" aria-hidden="true"></i>
+              </span>User management
+            </a>
+          </li>
+        </ul>
+      </li>
+      <!-- Multi-level dropdown menu -->
+      <li class="list-item">
+        <p class="list-title text-uppercase">Translations</p>
+        <ul class="list-unstyled">
+          <li>
+            <a href="javascript:void(0)" class="list-link link-arrow">
+              <span class="list-icon">
+                <i class="fa fa-language" aria-hidden="true"></i>
+              </span>Languages
+            </a>
+            <ul class="list-unstyled list-hidden">
+              <li>
+                <a href="#" class="list-link link-current">English</a>
+              </li>
+              <li>
+                <a href="#" class="list-link">Chinese</a>
+              </li>
+              <li>
+                <a href="#" class="list-link">German</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>

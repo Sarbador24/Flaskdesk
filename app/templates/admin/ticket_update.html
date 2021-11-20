@@ -1,0 +1,178 @@
+{% extends 'layouts/dashboard.base.html' %}
+{% block title %}Flaskdesk — Update Ticket{% endblock %}
+{% block content %}
+
+<div class="d-flex" id="wrapper">
+  <!-- Sidebar -->
+  {% include 'includes/sidebar.admin.html' %}
+
+  <!-- Website content -->
+  <div class="content">
+    <!-- Navbar top fixed -->
+    {% include 'includes/navbar.admin.html' %}
+
+    <!-- Content container -->
+    <div class="container-fluid">
+      <!-- Header -->
+      <div class="content-box mb-3 content-lighten">
+        <div class="row">
+          <div class="col-md-6">
+            <h3>Update Ticket</h3>
+          </div>
+          <div class="col-md-6">
+            <!--
+            <div class="text-right mt-1">
+              <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#createModal">
+                Create new
+              </button>
+            </div>
+            -->
+          </div>
+        </div>
+      </div>
+
+      {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}" role="alert">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <table class="table table-bordered table-responsive-sm bg-white">
+        <tbody>
+          {% for row in ticket %}
+          <form action="" method="POST">
+            <tr>
+              <td>Date Created</td>
+              <td>{{ row.date_created }}</td>
+            </tr>
+            <tr>
+              <td>Ticket ID</td>
+              <td>{{ row.public_id }}</td>
+            </tr>
+            <tr>
+              <td>Author</td>
+              <td>{{ row.author.name }}</td>
+            </tr>
+            <tr>
+              <td>E-mail Address</td>
+              <td>{{ row.author.email }}</td>
+            </tr>
+            <tr>
+              <td>Subject</td>
+              <td>
+                <div class="form-group">
+                  <input type="text" class="form-control" name="subject" value="{{ row.subject }}" maxlength="128" required>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Body</td>
+              <td>
+                <div class="form-group">
+                  <textarea class="form-control" name="body" rows="10" required>{{ row.body }}</textarea>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Assigned to</td>
+              <td>
+                <div class="form-group">
+                  <select class="custom-select" name="owner_id">
+                    {% if row.owner_id == None %}
+                      <option value="">--- Please select ---</option>
+                    {% else %}
+                      <option value=""></option>
+                    {% endif %}
+
+                    {% for user in users %}
+                      {% if user.id == row.owner.id %}
+                        <option value="{{ user.id }}" selected>{{ user.name }}</option>
+                      {% else %}
+                        <option value="{{ user.id }}">{{ user.name }}</option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Category</td>
+              <td>
+                <div class="form-group">
+                  <select class="custom-select" name="category" required>
+                    {% if row.category_id == None %}
+                      <option value="">--- Please select ---</option>
+                    {% endif %}
+
+                    {% for option in categories %}
+                      {% if option.id == row.category.id %}
+                        <option value="{{ row.category.id }}" selected>{{ row.category.category }}</option>
+                      {% else %}
+                        <option value="{{ option.id }}">{{ option.category }}</option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Priority</td>
+              <td>
+                <div class="form-group">
+                  <select class="custom-select" name="priority" required>
+                    {% if row.priority_id == None %}
+                      <option value="">--- Please select ---</option>
+                    {% endif %}
+
+                    {% for option in priorities %}
+                      {% if option.id == row.priority.id %}
+                        <option value="{{ row.priority.id }}" selected>{{ row.priority.priority }}</option>
+                      {% else %}
+                        <option value="{{ option.id }}">{{ option.priority }}</option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>Status</td>
+              <td>
+                <div class="form-group">
+                  <select class="custom-select" name="status" required>
+                    {% if row.status_id == None %}
+                      <option value="">--- Please select ---</option>
+                    {% endif %}
+
+                    {% for option in statuses %}
+                      {% if option.id == row.status.id %}
+                        <option value="{{ row.status.id }}" selected>{{ row.status.status }}</option>
+                      {% else %}
+                        <option value="{{ option.id }}">{{ option.status }}</option>
+                      {% endif %}
+                    {% endfor %}
+                  </select>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td></td>
+              <td>
+                <a href="#" class="btn btn-secondary">Back</a>
+                <button type="submit" class="btn btn-primary">Update</button>
+              </td>
+            </tr>
+          </form>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

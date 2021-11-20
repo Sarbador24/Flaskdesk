@@ -1,0 +1,36 @@
+<nav class="navbar navbar-expand-lg fixed-top navbar-lighten">
+  <!-- Navbar title -->
+  <a class="navbar-brand navbar-link text-uppercase" href="{{ url_for('admin.dashboard') }}">
+    <strong>Flask</strong>desk
+  </a>
+
+  <!-- Navbar sidebar menu toggle -->
+  <span class="navbar-text">
+    <a href="javascript:void(0)" id="sidebar-toggle" class="navbar-bars">
+      <i class="fa fa-bars" aria-hidden="true"></i>
+    </a>
+  </span>
+
+  <!-- Navbar dropdown menu-->
+  <div class="collapse navbar-collapse">
+    <div class="dropdown dropdown-logged dropdown-logged-lighten">
+      <a href="javascript:void(0)" data-toggle="dropdown" class="dropdown-logged-toggle dropdown-link">
+        <span class="dropdown-user float-left">Administrator</span>
+      </a>
+
+      <div class="dropdown-menu dropdown-logged-menu dropdown-menu-right border-0 dropdown-menu-lighten">
+        <div class="dropdown-menu-arrow"></div>
+        <a class="dropdown-item dropdown-logged-item" href="#">
+          <i class="fa fa-user" aria-hidden="true"></i>Your profile
+        </a>
+        <a class="dropdown-item dropdown-logged-item" href="#">
+          <i class="fa fa-cog" aria-hidden="true"></i>Account settings
+        </a>
+        <div class="dropdown-divider border-light"></div>
+        <a class="dropdown-item dropdown-logged-item" href="{{ url_for('auth.logout') }}">
+          <i class="fa fa-sign-out" aria-hidden="true"></i>Logout
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
