@@ -51,7 +51,7 @@
           {% for row in priorities %}
           <tr>
             <td>{{ row.priority }}</td>
-            <td>{{ row.date_created }}</td>
+            <td>{{ row.date_created.strftime('%m/%d/%Y, %I:%M %p') }}</td>
             <td>
               <button type="button" class="btn btn-sm btn-primary"
               {% if row.id <= 4 %}

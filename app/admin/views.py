@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, request, url_for, flash
 from flask_login import current_user
 from sqlalchemy import or_
-from app.admin.forms import TicketForm, CategoryForm, PriorityForm, StatusForm
+from app.admin.forms import TicketForm, TicketUpdateForm, CategoryForm, PriorityForm, StatusForm
 from app.models import User, Ticket, Category, Priority, Status
 from app.decorators import login_required
 from app import db
@@ -33,7 +33,7 @@ def ticket():
 			body=form.body.data,
 			author_id=author_id,
 			owner_id=owner_id,
-			category_id=form.category.data,
+			category_id=int(form.category.data),
 			priority_id=priority,
 			status_id=status
 		)
@@ -49,26 +49,33 @@ def ticket():
 def update_ticket(id, public_id):
 	users = User.query.filter(or_(User.role=='admin', User.role=='agent')).all()
 	ticket = Ticket.query.filter_by(id=id)
-	categories = Category.query.all()
-	priorities = Priority.query.all()
-	statuses = Status.query.all()
-	if request.method == 'POST':
+	for i in ticket:
+		category = i.category_id
+		priority = i.priority_id
+		status = i.status_id
+
+	form = TicketUpdateForm(
+		category=category,
+		priority=priority,
+		status=status
+	)
+	if form.validate_on_submit():
 		ticket_id = Ticket.query.get_or_404(id)
-		ticket_id.subject = request.form['subject']
-		ticket_id.body = request.form['body']
+		# ticket_id.subject = request.form['subject']
+		# ticket_id.body = request.form['body']
 		
 		if not request.form['owner_id']:
 			ticket_id.owner_id = None
 		else:
-			ticket_id.owner_id = request.form['owner_id']
-
-		ticket_id.category_id = request.form['category']
-		ticket_id.priority_id = request.form['priority']
-		ticket_id.status_id = request.form['status']
+			ticket_id.owner_id = int(request.form['owner_id'])
+		
+		ticket_id.category_id = int(form.category.data)
+		ticket_id.priority_id = int(form.priority.data)
+		ticket_id.status_id = int(form.status.data)
 		db.session.commit()
 		flash('Ticket has been updated.', 'success')
 		return redirect(url_for('admin.update_ticket', id=id, public_id=public_id))
-	return render_template('admin/ticket_update.html', users=users, ticket=ticket, categories=categories, priorities=priorities, statuses=statuses)
+	return render_template('admin/ticket_update.html', form=form, users=users, ticket=ticket)
 
 @admin_blueprint.route('/ticket/delete/<int:id>', methods=['GET', 'POST'])
 @login_required(role='admin')

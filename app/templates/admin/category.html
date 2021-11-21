@@ -51,7 +51,7 @@
           {% for row in categories %}
           <tr>
             <td>{{ row.category }}</td>
-            <td>{{ row.date_created }}</td>
+            <td>{{ row.date_created.strftime('%m/%d/%Y, %I:%M %p') }}</td>
             <td>
               <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#updateModal{{ row.id }}">
                 <i class="fa fa-edit"></i>

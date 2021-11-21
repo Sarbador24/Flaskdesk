@@ -43,11 +43,12 @@
 
       <table class="table table-bordered table-responsive-sm bg-white">
         <tbody>
-          {% for row in ticket %}
           <form action="" method="POST">
+          {{ form.csrf_token }}
+          {% for row in ticket %}
             <tr>
               <td>Date Created</td>
-              <td>{{ row.date_created }}</td>
+              <td>{{ row.date_created.strftime('%B %d, %Y — %I:%M %p') }}</td>
             </tr>
             <tr>
               <td>Ticket ID</td>
@@ -63,31 +64,18 @@
             </tr>
             <tr>
               <td>Subject</td>
-              <td>
-                <div class="form-group">
-                  <input type="text" class="form-control" name="subject" value="{{ row.subject }}" maxlength="128" required>
-                </div>
-              </td>
+              <td>{{ row.subject }}</td>
             </tr>
             <tr>
               <td>Body</td>
-              <td>
-                <div class="form-group">
-                  <textarea class="form-control" name="body" rows="10" required>{{ row.body }}</textarea>
-                </div>
-              </td>
+              <td>{{ row.body|safe }}</td>
             </tr>
             <tr>
-              <td>Assigned to</td>
+              <td>Assign to</td>
               <td>
                 <div class="form-group">
                   <select class="custom-select" name="owner_id">
-                    {% if row.owner_id == None %}
-                      <option value="">--- Please select ---</option>
-                    {% else %}
-                      <option value=""></option>
-                    {% endif %}
-
+                    <option value="">--- Please select agent ---</option>
                     {% for user in users %}
                       {% if user.id == row.owner.id %}
                         <option value="{{ user.id }}" selected>{{ user.name }}</option>
@@ -103,19 +91,16 @@
               <td>Category</td>
               <td>
                 <div class="form-group">
-                  <select class="custom-select" name="category" required>
-                    {% if row.category_id == None %}
-                      <option value="">--- Please select ---</option>
-                    {% endif %}
-
-                    {% for option in categories %}
-                      {% if option.id == row.category.id %}
-                        <option value="{{ row.category.id }}" selected>{{ row.category.category }}</option>
-                      {% else %}
-                        <option value="{{ option.id }}">{{ option.category }}</option>
-                      {% endif %}
+                  {% if form.category.errors %}
+                    {{ form.category(class="custom-select is-invalid") }}
+                    {% for error in form.category.errors %}
+                      <div class="invalid-feedback">
+                        {{ error }}
+                      </div>
                     {% endfor %}
-                  </select>
+                  {% else %}
+                    {{ form.category(class="custom-select") }}
+                  {% endif %}
                 </div>
               </td>
             </tr>
@@ -123,19 +108,16 @@
               <td>Priority</td>
               <td>
                 <div class="form-group">
-                  <select class="custom-select" name="priority" required>
-                    {% if row.priority_id == None %}
-                      <option value="">--- Please select ---</option>
-                    {% endif %}
-
-                    {% for option in priorities %}
-                      {% if option.id == row.priority.id %}
-                        <option value="{{ row.priority.id }}" selected>{{ row.priority.priority }}</option>
-                      {% else %}
-                        <option value="{{ option.id }}">{{ option.priority }}</option>
-                      {% endif %}
+                  {% if form.priority.errors %}
+                    {{ form.priority(class="custom-select is-invalid") }}
+                    {% for error in form.priority.errors %}
+                      <div class="invalid-feedback">
+                        {{ error }}
+                      </div>
                     {% endfor %}
-                  </select>
+                  {% else %}
+                    {{ form.priority(class="custom-select") }}
+                  {% endif %}
                 </div>
               </td>
             </tr>
@@ -143,31 +125,27 @@
               <td>Status</td>
               <td>
                 <div class="form-group">
-                  <select class="custom-select" name="status" required>
-                    {% if row.status_id == None %}
-                      <option value="">--- Please select ---</option>
-                    {% endif %}
-
-                    {% for option in statuses %}
-                      {% if option.id == row.status.id %}
-                        <option value="{{ row.status.id }}" selected>{{ row.status.status }}</option>
-                      {% else %}
-                        <option value="{{ option.id }}">{{ option.status }}</option>
-                      {% endif %}
+                  {% if form.status.errors %}
+                    {{ form.status(class="custom-select is-invalid") }}
+                    {% for error in form.status.errors %}
+                      <div class="invalid-feedback">
+                        {{ error }}
+                      </div>
                     {% endfor %}
-                  </select>
+                  {% else %}
+                    {{ form.status(class="custom-select") }}
+                  {% endif %}
                 </div>
               </td>
             </tr>
             <tr>
               <td></td>
               <td>
-                <a href="#" class="btn btn-secondary">Back</a>
                 <button type="submit" class="btn btn-primary">Update</button>
               </td>
             </tr>
-          </form>
           {% endfor %}
+          </form>
         </tbody>
       </table>
     </div>
