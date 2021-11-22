@@ -56,7 +56,11 @@
           <tr>
             <td>{{ row.public_id[:6] }}</td>
             <td>
-              <h6>{{ row.author.name }}</h6>
+              <h6>
+                <a href="{{ url_for('admin.comments', id=row.id, public_id=row.public_id) }}">
+                  {{ row.author.name }}
+                </a>
+              </h6>
             </td>
             <td>
               <h6>{{ row.subject[:32] }}</h6>

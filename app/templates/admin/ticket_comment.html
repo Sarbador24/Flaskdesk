@@ -1,0 +1,138 @@
+{% extends 'layouts/dashboard.base.html' %}
+{% block title %}Flaskdesk — Comments{% endblock %}
+{% block content %}
+
+<div class="d-flex" id="wrapper">
+  <!-- Sidebar -->
+  {% include 'includes/sidebar.admin.html' %}
+
+  <!-- Website content -->
+  <div class="content">
+    <!-- Navbar top fixed -->
+    {% include 'includes/navbar.admin.html' %}
+
+    <!-- Content container -->
+    <div class="container-fluid">
+      <!-- Header -->
+      <div class="content-box mb-3 content-lighten">
+        <div class="row">
+          <div class="col-md-6">
+            <h3>Comments</h3>
+          </div>
+          <div class="col-md-6">
+            <!--
+            <div class="text-right mt-1">
+              <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#createModal">
+                Create new
+              </button>
+            </div>
+            -->
+          </div>
+        </div>
+      </div>
+
+      {% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}" role="alert">
+              {{ message }}
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <table class="table table-bordered table-responsive-sm bg-white">
+        <tbody>
+          {% for row in ticket %}
+            <tr>
+              <td>Date Created</td>
+              <td>{{ row.date_created.strftime('%B %d, %Y — %I:%M %p') }}</td>
+            </tr>
+            <tr>
+              <td>Ticket ID</td>
+              <td>{{ row.public_id }}</td>
+            </tr>
+            <tr>
+              <td>Author</td>
+              <td>{{ row.author.name }}</td>
+            </tr>
+            <tr>
+              <td>E-mail Address</td>
+              <td>{{ row.author.email }}</td>
+            </tr>
+            <tr>
+              <td>Subject</td>
+              <td>{{ row.subject }}</td>
+            </tr>
+            <tr>
+              <td>Body</td>
+              <td>{{ row.body|safe }}</td>
+            </tr>
+            <tr>
+              <td>Assigned to</td>
+              <td>{{ row.owner.name }}</td>
+            </tr>
+            <tr>
+              <td>Category</td>
+              <td>{{ row.category.category }}</td>
+            </tr>
+            <tr>
+              <td>Priority</td>
+              <td>{{ row.priority.priority }}</td>
+            </tr>
+            <tr>
+              <td>Status</td>
+              <td>{{ row.status.status }}</td>
+            </tr>
+            <tr>
+              <td>Comments</td>
+              <td>
+                {% for comment in comments %}
+                  {% if comment.user.role == 'admin' or comment.user.role == 'agent' %}
+                    <div class="text-right">
+                      <b>{{ comment.user.name }} (Support Team) — </b>
+                      {{ comment.date_created.strftime('%m/%d/%Y, %I:%M %p') }}
+                    </div>
+                    <div class="alert text-right mb-2">
+                      {{ comment.comment }}
+                    </div>
+                  {% else %}
+                    <div class="text-left">
+                      <b>{{ comment.user.name }} — </b>
+                      {{ comment.date_created.strftime('%m/%d/%Y, %I:%M %p') }}
+                    </div>
+                    <div class="alert text-left mb-2">
+                      {{ comment.comment }}
+                    </div>
+                  {% endif %}
+                {% endfor %}
+              
+                {% if row.status.status != 'Closed' or row.status.status != 'Resolved' %}
+                  <form action="{{ url_for('admin.send_comment', id=row.id, public_id=row.public_id) }}" method="POST">
+                    <div class="form-group">
+                      <input type="hidden" name="author_id" value="{{ current_user.id }}">
+                      <input type="hidden" name="ticket_id" value="{{ row.id }}">
+                      <textarea class="form-control" name="comment" placeholder="Leave a comment..." rows="10" required></textarea>
+                    </div>
+                    <a href="{{ url_for('admin.ticket') }}" class="btn btn-secondary">Back</a>
+                    <button type="submit" class="btn btn-primary">Send</button>
+                  </form>
+
+                  <form action="{{ url_for('admin.close_ticket', id=row.id, public_id=row.public_id) }}" method="POST">
+                    <input type="hidden" name="status_id" value="4">
+                    <button type="submit" class="btn btn-danger float-right">Close Ticket</button>
+                  </form>
+                {% else %}
+                  <span>Hello</span>
+                {% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

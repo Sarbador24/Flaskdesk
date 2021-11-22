@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, redirect, request, url_for, flash
 from flask_login import current_user
 from sqlalchemy import or_
 from app.admin.forms import TicketForm, TicketUpdateForm, CategoryForm, PriorityForm, StatusForm
-from app.models import User, Ticket, Category, Priority, Status
+from app.models import User, Ticket, Category, Priority, Status, Comment
 from app.decorators import login_required
 from app import db
 import uuid
@@ -86,6 +86,39 @@ def delete_ticket(id):
 		db.session.commit()
 		flash('Ticket has been deleted.', 'success')
 		return redirect(url_for('admin.ticket'))
+	return redirect(url_for('admin.ticket'))
+
+@admin_blueprint.route('/ticket/comments/<int:id>/<public_id>')
+@login_required(role='admin')
+def comments(id, public_id):
+	ticket = Ticket.query.filter_by(id=id)
+	comments = Comment.query.filter(Comment.ticket_id == id).all()
+	return render_template('admin/ticket_comment.html', ticket=ticket, comments=comments)
+
+@admin_blueprint.route('/ticket/comment/send/<int:id>/<public_id>', methods=['GET', 'POST'])
+@login_required(role='admin')
+def send_comment(id, public_id):
+	if request.method == 'POST':
+		comment = request.form['comment']
+		author_id = request.form['author_id']
+		ticket_id = request.form['ticket_id']
+
+		db.session.add(Comment(comment=comment, author_id=author_id, ticket_id=ticket_id))
+		db.session.commit()
+		flash('Your comment has been sent.', 'success')
+		return redirect(url_for('admin.comments', id=id, public_id=public_id))
+	return redirect(url_for('admin.ticket'))
+
+@admin_blueprint.route('/ticket/close/<int:id>/<public_id>', methods=['GET', 'POST'])
+@login_required(role='admin')
+def close_ticket(id, public_id):
+	if request.method == 'POST':
+		ticket_id = Ticket.query.get_or_404(id)
+		ticket_id.status_id = int(request.form['status_id'])
+
+		db.session.commit()
+		flash('Ticket has been closed.', 'success')
+		return redirect(url_for('admin.comments', id=id, public_id=public_id))
 	return redirect(url_for('admin.ticket'))
 
 @admin_blueprint.route('/categories', methods=['GET', 'POST'])
