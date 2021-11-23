@@ -1,6 +1,4 @@
-/*
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap");
-*/
 
 html,
 body {
@@ -14,20 +12,24 @@ body {
 }
 
 /* Change table style */
-.table thead th {
+#table thead th {
   border-bottom: 1px solid #dee2e6 !important;
 }
 
-.table td, .table th {
+#table td, .table th {
   border-top: none !important;
 }
 
-table {
+#table {
   border-radius: 0.25rem;
 }
 
-table th {
+#table th {
   font-weight: 400;
+}
+
+.ticket-view {
+  border-style: hidden;
 }
 
 .content {

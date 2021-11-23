@@ -31,6 +31,13 @@
         </div>
       </div>
 
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="{{ url_for('admin.ticket') }}">Tickets</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Update</li>
+        </ol>
+      </nav>
+
       {% with messages = get_flashed_messages(with_categories=True) %}
         {% if messages %}
           {% for category, message in messages %}
@@ -41,7 +48,7 @@
         {% endif %}
       {% endwith %}
 
-      <table class="table table-bordered table-responsive-sm bg-white">
+      <table class="table table-bordered table-responsive-sm ticket-view bg-white">
         <tbody>
           <form action="" method="POST">
           {{ form.csrf_token }}

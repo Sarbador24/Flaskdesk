@@ -4,6 +4,7 @@ from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_mail import Mail
+from flask_wtf.csrf import CSRFProtect
 
 app = Flask(__name__)
 # Configuration
@@ -15,6 +16,7 @@ login_manager = LoginManager(app)
 migrate = Migrate(app, db)
 bcrypt = Bcrypt(app)
 mail = Mail(app)
+csrf = CSRFProtect(app)
 
 from app.auth.views import auth_blueprint
 from app.admin.views import admin_blueprint

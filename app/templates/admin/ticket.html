@@ -28,7 +28,7 @@
           </div>
         </div>
       </div>
-
+      
       {% with messages = get_flashed_messages(with_categories=True) %}
         {% if messages %}
           {% for category, message in messages %}
@@ -54,16 +54,18 @@
         <tbody>
           {% for row in tickets %}
           <tr>
-            <td>{{ row.public_id[:6] }}</td>
             <td>
-              <h6>
-                <a href="{{ url_for('admin.comments', id=row.id, public_id=row.public_id) }}">
-                  {{ row.author.name }}
-                </a>
-              </h6>
+              <a href="{{ url_for('admin.comments', id=row.id, public_id=row.public_id) }}">
+                {{ row.public_id[:6] }}
+              </a>
             </td>
             <td>
-              <h6>{{ row.subject[:32] }}</h6>
+              <a href="{{ url_for('admin.comments', id=row.id, public_id=row.public_id) }}">
+                {{ row.author.name }}
+              </a>
+            </td>
+            <td>
+              {{ row.subject[:32] }}<br>
               <small class="text-muted">{{ row.body[:64] }}</small>
             </td>
             <td>{{ row.owner.name }}</td>

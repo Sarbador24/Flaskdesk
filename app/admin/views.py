@@ -17,7 +17,6 @@ def dashboard():
 @admin_blueprint.route('/tickets', methods=['GET', 'POST'])
 @login_required(role='admin')
 def ticket():
-	# users = User.query.filter(or_(User.role=='admin', User.role=='agent')).all()
 	tickets = Ticket.query.all()
 	form = TicketForm()
 	if form.validate_on_submit():
@@ -40,7 +39,7 @@ def ticket():
 		
 		db.session.add(ticket)
 		db.session.commit()
-		flash('Category has been created.', 'success')
+		flash('Category has been created.', 'primary')
 		return redirect(url_for('admin.ticket'))
 	return render_template('admin/ticket.html', tickets=tickets, form=form)
 
@@ -61,9 +60,6 @@ def update_ticket(id, public_id):
 	)
 	if form.validate_on_submit():
 		ticket_id = Ticket.query.get_or_404(id)
-		# ticket_id.subject = request.form['subject']
-		# ticket_id.body = request.form['body']
-		
 		if not request.form['owner_id']:
 			ticket_id.owner_id = None
 		else:
@@ -73,7 +69,7 @@ def update_ticket(id, public_id):
 		ticket_id.priority_id = int(form.priority.data)
 		ticket_id.status_id = int(form.status.data)
 		db.session.commit()
-		flash('Ticket has been updated.', 'success')
+		flash('Ticket has been updated.', 'primary')
 		return redirect(url_for('admin.update_ticket', id=id, public_id=public_id))
 	return render_template('admin/ticket_update.html', form=form, users=users, ticket=ticket)
 
@@ -84,28 +80,35 @@ def delete_ticket(id):
 		ticket_id = Ticket.query.get_or_404(id)
 		db.session.delete(ticket_id)
 		db.session.commit()
-		flash('Ticket has been deleted.', 'success')
+		flash('Ticket has been deleted.', 'primary')
 		return redirect(url_for('admin.ticket'))
 	return redirect(url_for('admin.ticket'))
 
-@admin_blueprint.route('/ticket/comments/<int:id>/<public_id>')
+@admin_blueprint.route('/ticket/comments/<int:id>/<public_id>', methods=['GET', 'POST'])
 @login_required(role='admin')
 def comments(id, public_id):
 	ticket = Ticket.query.filter_by(id=id)
 	comments = Comment.query.filter(Comment.ticket_id == id).all()
-	return render_template('admin/ticket_comment.html', ticket=ticket, comments=comments)
-
-@admin_blueprint.route('/ticket/comment/send/<int:id>/<public_id>', methods=['GET', 'POST'])
-@login_required(role='admin')
-def send_comment(id, public_id):
 	if request.method == 'POST':
 		comment = request.form['comment']
-		author_id = request.form['author_id']
-		ticket_id = request.form['ticket_id']
+		author_id = int(request.form['author_id'])
+		ticket_id = int(request.form['ticket_id'])
 
 		db.session.add(Comment(comment=comment, author_id=author_id, ticket_id=ticket_id))
 		db.session.commit()
-		flash('Your comment has been sent.', 'success')
+		flash('Your comment has been sent.', 'primary')
+		return redirect(url_for('admin.comments', id=id, public_id=public_id))
+	return render_template('admin/ticket_comment.html', ticket=ticket, comments=comments)
+
+@admin_blueprint.route('/ticket/open/<int:id>/<public_id>', methods=['GET', 'POST'])
+@login_required(role='admin')
+def open_ticket(id, public_id):
+	if request.method == 'POST':
+		ticket_id = Ticket.query.get_or_404(id)
+		ticket_id.status_id = int(request.form['status_id'])
+
+		db.session.commit()
+		flash('Ticket has been re-opened.', 'primary')
 		return redirect(url_for('admin.comments', id=id, public_id=public_id))
 	return redirect(url_for('admin.ticket'))
 
@@ -117,7 +120,7 @@ def close_ticket(id, public_id):
 		ticket_id.status_id = int(request.form['status_id'])
 
 		db.session.commit()
-		flash('Ticket has been closed.', 'success')
+		flash('Ticket has been closed.', 'primary')
 		return redirect(url_for('admin.comments', id=id, public_id=public_id))
 	return redirect(url_for('admin.ticket'))
 
@@ -130,7 +133,7 @@ def category():
 		category = Category(category=form.category.data)
 		db.session.add(category)
 		db.session.commit()
-		flash('Category has been created.', 'success')
+		flash('Category has been created.', 'primary')
 		return redirect(url_for('admin.category'))
 	return render_template('admin/category.html', categories=categories, form=form)
 
@@ -142,7 +145,7 @@ def update_category():
 		category_id = Category.query.get_or_404(request.form.get('id'))
 		category_id.category = form.category.data
 		db.session.commit()
-		flash('Category has been updated.', 'success')
+		flash('Category has been updated.', 'primary')
 		return redirect(url_for('admin.category'))
 	return render_template('admin/category.html', form=form)
 
@@ -153,7 +156,7 @@ def delete_category(id):
 		category_id = Category.query.get_or_404(id)
 		db.session.delete(category_id)
 		db.session.commit()
-		flash('Category has been deleted.', 'success')
+		flash('Category has been deleted.', 'primary')
 		return redirect(url_for('admin.category'))
 	return redirect(url_for('admin.category'))
 
@@ -166,7 +169,7 @@ def priority():
 		priority = Priority(priority=form.priority.data)
 		db.session.add(priority)
 		db.session.commit()
-		flash('Priority has been created.', 'success')
+		flash('Priority has been created.', 'primary')
 		return redirect(url_for('admin.priority'))
 	return render_template('admin/priority.html', priorities=priorities, form=form)
 
@@ -178,7 +181,7 @@ def update_priority():
 		priority_id = Priority.query.get_or_404(request.form.get('id'))
 		priority_id.priority = form.priority.data
 		db.session.commit()
-		flash('Priority has been updated.', 'success')
+		flash('Priority has been updated.', 'primary')
 		return redirect(url_for('admin.priority'))
 	return render_template('admin/priority.html', form=form)
 
@@ -189,7 +192,7 @@ def delete_priority(id):
 		priority_id = Priority.query.get_or_404(id)
 		db.session.delete(priority_id)
 		db.session.commit()
-		flash('Priority has been deleted.', 'success')
+		flash('Priority has been deleted.', 'primary')
 		return redirect(url_for('admin.priority'))
 	return redirect(url_for('admin.priority'))
 
@@ -202,7 +205,7 @@ def status():
 		status = Status(status=form.status.data)
 		db.session.add(status)
 		db.session.commit()
-		flash('Status has been created.', 'success')
+		flash('Status has been created.', 'primary')
 		return redirect(url_for('admin.status'))
 	return render_template('admin/status.html', statuses=statuses, form=form)
 
@@ -214,7 +217,7 @@ def update_status():
 		status_id = Status.query.get_or_404(request.form.get('id'))
 		status_id.status = form.status.data
 		db.session.commit()
-		flash('Status has been updated.', 'success')
+		flash('Status has been updated.', 'primary')
 		return redirect(url_for('admin.status'))
 	return render_template('admin/status.html', form=form)
 
@@ -225,6 +228,6 @@ def delete_status(id):
 		status_id = Status.query.get_or_404(id)
 		db.session.delete(status_id)
 		db.session.commit()
-		flash('Status has been deleted.', 'success')
+		flash('Status has been deleted.', 'primary')
 		return redirect(url_for('admin.status'))
 	return redirect(url_for('admin.status'))
