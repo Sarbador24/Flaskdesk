@@ -54,7 +54,7 @@
           {{ form.csrf_token }}
           {% for row in ticket %}
             <tr>
-              <td>Date Created</td>
+              <td class="w-25">Date Created</td>
               <td>{{ row.date_created.strftime('%B %d, %Y — %I:%M %p') }}</td>
             </tr>
             <tr>
@@ -75,7 +75,11 @@
             </tr>
             <tr>
               <td>Body</td>
-              <td>{{ row.body|safe }}</td>
+              <td>
+                <div class="fr-view">
+                  {{ row.body|safe }}
+                </div>
+              </td>
             </tr>
             <tr>
               <td>Assign to</td>

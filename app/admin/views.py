@@ -17,7 +17,7 @@ def dashboard():
 @admin_blueprint.route('/tickets', methods=['GET', 'POST'])
 @login_required(role='admin')
 def ticket():
-	tickets = Ticket.query.all()
+	tickets = Ticket.query.order_by(Ticket.id.desc()).all()
 	form = TicketForm()
 	if form.validate_on_submit():
 		public_id = str(uuid.uuid4())
@@ -39,7 +39,7 @@ def ticket():
 		
 		db.session.add(ticket)
 		db.session.commit()
-		flash('Category has been created.', 'primary')
+		flash('Ticket has been created.', 'primary')
 		return redirect(url_for('admin.ticket'))
 	return render_template('admin/ticket.html', tickets=tickets, form=form)
 

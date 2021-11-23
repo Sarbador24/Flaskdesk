@@ -32,6 +32,10 @@ body {
   border-style: hidden;
 }
 
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, .08);
+}
+
 .content {
   min-width: 100vw;
 }

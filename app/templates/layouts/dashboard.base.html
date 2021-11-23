@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/stylesheet.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='vendor/datatables/css/dataTables.bootstrap4.min.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='vendor/perfect-scrollbar/css/perfect-scrollbar.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='vendor/froala-editor/css/froala_editor.pkgd.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='vendor/froala-editor/css/froala_style.min.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='vendor/font-awesome/css/font-awesome.min.css') }}">
 
   <title>{% block title %}{% endblock %}</title>
@@ -23,10 +25,18 @@
   <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ url_for('static', filename='vendor/perfect-scrollbar/dist/perfect-scrollbar.js') }}"></script>
   <script src="{{ url_for('static', filename='vendor/nanobar/nanobar.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='vendor/froala-editor/js/froala_editor.pkgd.min.js') }}"></script>
   <script src="{{ url_for('static', filename='js/sidebar.js') }}"></script>
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   <script>
     $(function () {
+      new FroalaEditor('textarea#body', {
+        toolbarButtons: ['fontFamily', '|', 'bold', 'italic', 'underline', 'undo', 'redo', 'codeView'],
+        fontFamilySelection: true,
+        pluginsEnabled: ['fontFamily'],
+        heightMin: 100,
+        heightMax: 200
+      });
       new PerfectScrollbar(".list-scrollbar");
       var nanobar = new Nanobar();
       nanobar.go(100);
