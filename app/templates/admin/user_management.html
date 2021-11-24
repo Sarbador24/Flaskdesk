@@ -57,30 +57,11 @@
             <td>{{ row.role.capitalize() }}</td>
             <td>{{ row.date_created.strftime('%m/%d/%Y, %I:%M %p') }}</td>
             <td>
-              <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#promoteModal{{ row.id }}">
-                <i class="fa fa-user-plus"></i>
-              </button>
               <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal{{ row.id }}">
                 <i class="fa fa-trash"></i>
               </button>
             </td>
           </tr>
-          <!-- Promote Modal -->
-          <div class="modal fade" id="promoteModal{{ row.id }}" tabindex="-1" aria-labelledby="promoteModalLabel{{ row.id }}" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="promoteModalLabel{{ row.id }}">Promote User</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  
-                </div>
-              </div>
-            </div>
-          </div>
           <!-- Delete Modal -->
           <div class="modal fade" id="deleteModal{{ row.id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ row.id }}" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
