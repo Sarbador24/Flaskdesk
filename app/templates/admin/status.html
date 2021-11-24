@@ -119,6 +119,7 @@
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                   <form action="{{ url_for('admin.delete_status', id=row.id) }}" method="POST" role="form">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <input type="submit" class="btn btn-danger" value="Delete">
                   </form>
                 </div>

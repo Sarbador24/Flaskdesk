@@ -125,7 +125,7 @@
                 {% endfor %}
               
                 {% if row.status.status != 'Closed' %}
-                  <form action="{{ url_for('admin.comments', id=row.id, public_id=row.public_id) }}" method="POST">
+                  <form action="{{ url_for('admin.comment', id=row.id, public_id=row.public_id) }}" method="POST">
                     <div class="form-group">
                       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                       <input type="hidden" name="author_id" value="{{ current_user.id }}">

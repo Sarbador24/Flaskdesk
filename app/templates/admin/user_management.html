@@ -1,5 +1,5 @@
 {% extends 'layouts/dashboard.base.html' %}
-{% block title %}Flaskdesk — Tickets{% endblock %}
+{% block title %}Flaskdesk — User Management{% endblock %}
 {% block content %}
 
 <div class="d-flex" id="wrapper">
@@ -17,7 +17,7 @@
       <div class="content-box mb-3 content-lighten">
         <div class="row">
           <div class="col-md-6">
-            <h3>Tickets</h3>
+            <h3>User Management</h3>
           </div>
           <div class="col-md-6">
             <div class="text-right mt-1">
@@ -42,41 +42,45 @@
       <table id="table" class="table table-striped table-responsive-sm bg-white">
         <thead>
           <tr>
-            <th>ID</th>
-            <th>Author</th>
-            <th>Subject</th>
-            <th>Assigned to</th>
-            <th>Priority</th>
-            <th>Status</th>
-            <th data-orderable="false">Action</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Date Created</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          {% for row in tickets %}
+          {% for row in users %}
           <tr>
+            <td>{{ row.name }}</td>
+            <td>{{ row.email }}</td>
+            <td>{{ row.role.capitalize() }}</td>
+            <td>{{ row.date_created.strftime('%m/%d/%Y, %I:%M %p') }}</td>
             <td>
-              <a href="{{ url_for('admin.comment', id=row.id, public_id=row.public_id) }}">
-                {{ row.public_id[:6] }}
-              </a>
-            </td>
-            <td>
-              <a href="{{ url_for('admin.comment', id=row.id, public_id=row.public_id) }}">
-                {{ row.author.name }}
-              </a>
-            </td>
-            <td>{{ row.subject[:32] }}</td>
-            <td>{{ row.owner.name }}</td>
-            <td>{{ row.priority.priority }}</td>
-            <td>{{ row.status.status }}</td>
-            <td>
-              <a href="{{ url_for('admin.update_ticket', id=row.id, public_id=row.public_id) }}" class="btn btn-sm btn-primary">
-                <i class="fa fa-edit"></i>
-              </a>
+              <button type="button" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#promoteModal{{ row.id }}">
+                <i class="fa fa-user-plus"></i>
+              </button>
               <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal{{ row.id }}">
                 <i class="fa fa-trash"></i>
               </button>
             </td>
           </tr>
+          <!-- Promote Modal -->
+          <div class="modal fade" id="promoteModal{{ row.id }}" tabindex="-1" aria-labelledby="promoteModalLabel{{ row.id }}" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="promoteModalLabel{{ row.id }}">Promote User</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  
+                </div>
+              </div>
+            </div>
+          </div>
           <!-- Delete Modal -->
           <div class="modal fade" id="deleteModal{{ row.id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ row.id }}" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
@@ -88,11 +92,11 @@
                   </button>
                 </div>
                 <div class="modal-body">
-                  <p>Are you sure you want to delete this ticket? This action cannot be undone.</p>
+                  <p>Are you sure you want to delete this user? This action cannot be undone.</p>
                 </div>
                 <div class="modal-footer">
                   <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <form action="{{ url_for('admin.delete_ticket', id=row.id) }}" method="POST" role="form">
+                  <form action="{{ url_for('admin.delete_user', id=row.id) }}" method="POST" role="form">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <input type="submit" class="btn btn-danger" value="Delete">
                   </form>
@@ -116,42 +120,56 @@
             </button>
           </div>
           <div class="modal-body">
-            <form action="{{ url_for('admin.ticket') }}" method="POST">
+            <form action="{{ url_for('admin.user') }}" method="POST">
               {{ form.csrf_token }}
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  {% if form.name.errors %}
+                    {{ form.name(class="form-control is-invalid", placeholder="Name") }}
+                    {% for error in form.name.errors %}
+                      <div class="invalid-feedback">
+                        {{ error }}
+                      </div>
+                    {% endfor %}
+                  {% else %}
+                    {{ form.name(class="form-control", placeholder="Name") }}
+                  {% endif %}
+                </div>
+                <div class="form-group col-md-6">
+                  {% if form.email.errors %}
+                    {{ form.email(class="form-control is-invalid", placeholder="Email") }}
+                    {% for error in form.email.errors %}
+                      <div class="invalid-feedback">
+                        {{ error }}
+                      </div>
+                    {% endfor %}
+                  {% else %}
+                    {{ form.email(class="form-control", placeholder="Email") }}
+                  {% endif %}
+                </div>
+              </div>
               <div class="form-group">
-                {% if form.subject.errors %}
-                  {{ form.subject(class="form-control is-invalid", placeholder="Subject") }}
-                  {% for error in form.subject.errors %}
+                {% if form.password.errors %}
+                  {{ form.password(class="form-control is-invalid", placeholder="Password") }}
+                  {% for error in form.password.errors %}
                     <div class="invalid-feedback">
                       {{ error }}
                     </div>
                   {% endfor %}
                 {% else %}
-                  {{ form.subject(class="form-control", placeholder="Subject") }}
+                  {{ form.password(class="form-control", placeholder="Password") }}
                 {% endif %}
               </div>
               <div class="form-group">
-                {% if form.category.errors %}
-                  {{ form.category(class="custom-select is-invalid") }}
-                  {% for error in form.category.errors %}
+                {% if form.role.errors %}
+                  {{ form.role(class="custom-select is-invalid") }}
+                  {% for error in form.role.errors %}
                     <div class="invalid-feedback">
                       {{ error }}
                     </div>
                   {% endfor %}
                 {% else %}
-                  {{ form.category(class="custom-select") }}
-                {% endif %}
-              </div>
-              <div class="form-group">
-                {% if form.body.errors %}
-                  {{ form.body(class="form-control is-invalid", placeholder="Compose a message...", rows="6") }}
-                  {% for error in form.body.errors %}
-                    <div class="invalid-feedback">
-                      {{ error }}
-                    </div>
-                  {% endfor %}
-                {% else %}
-                  {{ form.body(class="form-control", placeholder="Compose a message...", rows="6") }}
+                  {{ form.role(class="custom-select") }}
                 {% endif %}
               </div>
               <button type="submit" class="btn btn-primary">Create</button>

@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SelectField, TextAreaField
-from wtforms.validators import DataRequired, Length
+from wtforms import StringField, EmailField, PasswordField, SelectField, TextAreaField
+from wtforms.validators import DataRequired, ValidationError, Length, Email
 from app.models import User, Category, Priority, Status
 
 class TicketForm(FlaskForm):
@@ -44,3 +44,23 @@ class PriorityForm(FlaskForm):
 class StatusForm(FlaskForm):
 	status = StringField('Status',
 		validators=[DataRequired(), Length(max=32)])
+
+class UserForm(FlaskForm):
+	name = StringField('Name',
+		validators=[DataRequired(), Length(max=64)])
+	email = EmailField('Email',
+		validators=[DataRequired(), Email(), Length(max=64)])
+	password = PasswordField('Password',
+		validators=[DataRequired(), Length(min=6, max=32)])
+	role = SelectField('Role',
+		# coerce=int,
+		validators=[DataRequired()])
+
+	def validate_email(self, email):
+		user = User.query.filter_by(email=email.data).first()
+		if user:
+			raise ValidationError('This email address is already taken')
+	
+	def __init__(self, *args, **kwargs):
+		super(UserForm, self).__init__(*args, **kwargs)
+		self.role.choices = [("", "--- Please select role ---"), ("admin", "Admin"), ("agent", "Agent")]

@@ -1,10 +1,10 @@
 from flask import Blueprint, render_template, redirect, request, url_for, flash
 from flask_login import current_user
 from sqlalchemy import or_
-from app.admin.forms import TicketForm, TicketUpdateForm, CategoryForm, PriorityForm, StatusForm
+from app.admin.forms import UserForm, TicketForm, TicketUpdateForm, CategoryForm, PriorityForm, StatusForm
 from app.models import User, Ticket, Category, Priority, Status, Comment
 from app.decorators import login_required
-from app import db
+from app import db, bcrypt
 import uuid
 
 admin_blueprint = Blueprint('admin', __name__)
@@ -86,7 +86,7 @@ def delete_ticket(id):
 
 @admin_blueprint.route('/ticket/comments/<int:id>/<public_id>', methods=['GET', 'POST'])
 @login_required(role='admin')
-def comments(id, public_id):
+def comment(id, public_id):
 	ticket = Ticket.query.filter_by(id=id)
 	comments = Comment.query.filter(Comment.ticket_id == id).all()
 	if request.method == 'POST':
@@ -97,7 +97,7 @@ def comments(id, public_id):
 		db.session.add(Comment(comment=comment, author_id=author_id, ticket_id=ticket_id))
 		db.session.commit()
 		flash('Your comment has been sent.', 'primary')
-		return redirect(url_for('admin.comments', id=id, public_id=public_id))
+		return redirect(url_for('admin.comment', id=id, public_id=public_id))
 	return render_template('admin/ticket_comment.html', ticket=ticket, comments=comments)
 
 @admin_blueprint.route('/ticket/open/<int:id>/<public_id>', methods=['GET', 'POST'])
@@ -231,3 +231,35 @@ def delete_status(id):
 		flash('Status has been deleted.', 'primary')
 		return redirect(url_for('admin.status'))
 	return redirect(url_for('admin.status'))
+
+@admin_blueprint.route('/user_management', methods=['GET', 'POST'])
+def user():	
+	users = User.query.filter(or_(User.role=='admin', User.role=='agent')).all()
+	form = UserForm()
+	if form.validate_on_submit():
+		public_id = str(uuid.uuid4())
+		hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+		user = User(
+			public_id=public_id,
+			name=form.name.data,
+			email=form.email.data,
+			password=hashed_password,
+			role=form.role.data
+		)
+		db.session.add(user)
+		db.session.commit()
+
+		flash('User has been created.', 'primary')
+		return redirect(url_for('admin.user'))
+	return render_template('admin/user_management.html', users=users, form=form)
+
+@admin_blueprint.route('/user/delete/<int:id>', methods=['GET', 'POST'])
+@login_required(role='admin')
+def delete_user(id):
+	if request.method == 'POST':
+		user_id = User.query.get_or_404(id)
+		db.session.delete(user_id)
+		db.session.commit()
+		flash('User has been deleted.', 'primary')
+		return redirect(url_for('admin.user'))
+	return redirect(url_for('admin.user'))
