@@ -109,7 +109,7 @@ def open_ticket(id, public_id):
 
 		db.session.commit()
 		flash('Ticket has been re-opened.', 'primary')
-		return redirect(url_for('admin.comments', id=id, public_id=public_id))
+		return redirect(url_for('admin.comment', id=id, public_id=public_id))
 	return redirect(url_for('admin.ticket'))
 
 @admin_blueprint.route('/ticket/close/<int:id>/<public_id>', methods=['GET', 'POST'])
@@ -121,7 +121,7 @@ def close_ticket(id, public_id):
 
 		db.session.commit()
 		flash('Ticket has been closed.', 'primary')
-		return redirect(url_for('admin.comments', id=id, public_id=public_id))
+		return redirect(url_for('admin.comment', id=id, public_id=public_id))
 	return redirect(url_for('admin.ticket'))
 
 @admin_blueprint.route('/categories', methods=['GET', 'POST'])

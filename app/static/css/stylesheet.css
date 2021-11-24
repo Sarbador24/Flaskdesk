@@ -30,6 +30,7 @@ body {
 
 .ticket-view {
   border-style: hidden;
+  border-radius: 0.25rem;
 }
 
 .table-striped tbody tr:nth-of-type(odd) {

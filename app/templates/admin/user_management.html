@@ -45,7 +45,6 @@
             <th>Name</th>
             <th>Email</th>
             <th>Role</th>
-            <th>Date Created</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -55,7 +54,6 @@
             <td>{{ row.name }}</td>
             <td>{{ row.email }}</td>
             <td>{{ row.role.capitalize() }}</td>
-            <td>{{ row.date_created.strftime('%m/%d/%Y, %I:%M %p') }}</td>
             <td>
               <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal{{ row.id }}">
                 <i class="fa fa-trash"></i>
@@ -92,7 +90,7 @@
 
     <!-- Create Modal -->
     <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-sm">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="createModalLabel">Create New</h5>
@@ -103,31 +101,29 @@
           <div class="modal-body">
             <form action="{{ url_for('admin.user') }}" method="POST">
               {{ form.csrf_token }}
-              <div class="form-row">
-                <div class="form-group col-md-6">
-                  {% if form.name.errors %}
-                    {{ form.name(class="form-control is-invalid", placeholder="Name") }}
-                    {% for error in form.name.errors %}
-                      <div class="invalid-feedback">
-                        {{ error }}
-                      </div>
-                    {% endfor %}
-                  {% else %}
-                    {{ form.name(class="form-control", placeholder="Name") }}
-                  {% endif %}
-                </div>
-                <div class="form-group col-md-6">
-                  {% if form.email.errors %}
-                    {{ form.email(class="form-control is-invalid", placeholder="Email") }}
-                    {% for error in form.email.errors %}
-                      <div class="invalid-feedback">
-                        {{ error }}
-                      </div>
-                    {% endfor %}
-                  {% else %}
-                    {{ form.email(class="form-control", placeholder="Email") }}
-                  {% endif %}
-                </div>
+              <div class="form-group">
+                {% if form.name.errors %}
+                  {{ form.name(class="form-control is-invalid", placeholder="Name") }}
+                  {% for error in form.name.errors %}
+                    <div class="invalid-feedback">
+                      {{ error }}
+                    </div>
+                  {% endfor %}
+                {% else %}
+                  {{ form.name(class="form-control", placeholder="Name") }}
+                {% endif %}
+              </div>
+              <div class="form-group">
+                {% if form.email.errors %}
+                  {{ form.email(class="form-control is-invalid", placeholder="Email") }}
+                  {% for error in form.email.errors %}
+                    <div class="invalid-feedback">
+                      {{ error }}
+                    </div>
+                  {% endfor %}
+                {% else %}
+                  {{ form.email(class="form-control", placeholder="Email") }}
+                {% endif %}
               </div>
               <div class="form-group">
                 {% if form.password.errors %}

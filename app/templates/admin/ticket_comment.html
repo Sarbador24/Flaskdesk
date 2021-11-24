@@ -100,18 +100,8 @@
               <td>
                 {% for comment in comments %}
                   {% if comment.user.role == 'admin' or comment.user.role == 'agent' %}
-                    <div class="text-right">
-                      <small>
-                        {{ comment.date_created.strftime('%m/%d/%Y, %I:%M %p') }}
-                        <span> &bull; </span>
-                        <b>{{ comment.user.name }}</b>
-                      </small>
-                    </div>
-                    <div class="alert text-right mb-2">
-                      {{ comment.comment }}
-                    </div>
-                  {% else %}
                     <div class="text-left">
+                      <i class="fa fa-user-circle fa-lg text-secondary"></i>
                       <small>
                         <b>{{ comment.user.name }}</b>
                         <span> &bull; </span>
@@ -119,7 +109,19 @@
                       </small>
                     </div>
                     <div class="alert text-left mb-2">
-                      {{ comment.comment }}
+                      {{ comment.comment|safe }}
+                    </div>
+                  {% else %}
+                    <div class="text-left">
+                      <i class="fa fa-user-circle fa-lg text-secondary"></i>
+                      <small>
+                        <b>{{ comment.user.name }}</b>
+                        <span> &bull; </span>
+                        {{ comment.date_created.strftime('%m/%d/%Y, %I:%M %p') }}
+                      </small>
+                    </div>
+                    <div class="alert text-left mb-2">
+                      {{ comment.comment|safe }}
                     </div>
                   {% endif %}
                 {% endfor %}
@@ -130,7 +132,7 @@
                       <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                       <input type="hidden" name="author_id" value="{{ current_user.id }}">
                       <input type="hidden" name="ticket_id" value="{{ row.id }}">
-                      <textarea class="form-control" name="comment" placeholder="Leave a comment..." rows="8" required></textarea>
+                      <textarea class="form-control" id="comment" name="comment" placeholder="Leave a comment..." rows="8" required></textarea>
                     </div>
                     <button type="submit" class="btn btn-primary float-left">Send</button>
                   </form>
@@ -144,7 +146,7 @@
                   <form action="{{ url_for('admin.open_ticket', id=row.id, public_id=row.public_id) }}" method="POST">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="status_id" value="1">
-                    <button type="submit" class="btn btn-secondary float-right">Re-open Ticket</button>
+                    <button type="submit" class="btn btn-primary float-right">Re-open Ticket</button>
                   </form>
                 {% endif %}
               </td>

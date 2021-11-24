@@ -30,7 +30,7 @@
   <script src="{{ url_for('static', filename='js/main.js') }}"></script>
   <script>
     $(function () {
-      new FroalaEditor('textarea#body', {
+      new FroalaEditor('textarea#body, textarea#comment', {
         toolbarButtons: ['fontFamily', '|', 'bold', 'italic', 'underline', 'undo', 'redo', 'codeView'],
         fontFamilySelection: true,
         pluginsEnabled: ['fontFamily'],
