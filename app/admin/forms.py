@@ -66,7 +66,7 @@ class UserForm(FlaskForm):
 		self.role.choices = [("", "--- Please select role ---"), ("admin", "Admin"), ("agent", "Agent")]
 
 class EmailUpdateForm(FlaskForm):
-	email = EmailField('Email address',
+	email = EmailField('Email Address',
 		validators=[DataRequired(), Email(), Length(max=64)])
 
 	def validate_email(self, email):
