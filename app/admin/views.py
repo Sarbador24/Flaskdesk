@@ -263,3 +263,8 @@ def delete_user(id):
 		flash('User has been deleted.', 'primary')
 		return redirect(url_for('admin.user'))
 	return redirect(url_for('admin.user'))
+
+@admin_blueprint.route('/account_settings')
+@login_required(role='admin')
+def account_settings():
+	return render_template('admin/account_settings.html')

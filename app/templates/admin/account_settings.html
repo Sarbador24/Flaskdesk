@@ -1,0 +1,67 @@
+{% extends 'layouts/dashboard.base.html' %}
+{% block title %}Flaskdesk — Account Settings{% endblock %}
+{% block content %}
+
+<div class="d-flex" id="wrapper">
+  <!-- Sidebar -->
+  {% include 'includes/sidebar.admin.html' %}
+
+  <!-- Website content -->
+  <div class="content">
+    <!-- Navbar top fixed -->
+    {% include 'includes/navbar.admin.html' %}
+
+    <!-- Content container -->
+    <div class="container-fluid">
+      <!-- Header -->
+      <div class="content-box mb-3 content-lighten">
+        <h3>Account Settings</h3>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+              <a class="nav-link active" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="true">Profile</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="email-tab" data-toggle="tab" href="#email" role="tab" aria-controls="email" aria-selected="false">Email</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="change-password-tab" data-toggle="tab" href="#changePassword" role="tab" aria-controls="change-password" aria-selected="false">Change Password</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="delete-account-tab" data-toggle="tab" href="#deleteAccount" role="tab" aria-controls="delete-account" aria-selected="false">Delete Account</a>
+            </li>
+          </ul>
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+              <table class="table table-bordered mt-4 table-responsive-sm">
+                <tbody>
+                  <tr>
+                    <td>Name</td>
+                    <td>John Smith</td>
+                  </tr>
+                  <tr>
+                    <td>Email</td>
+                    <td>admin@Flaskdesk.com</td>
+                  </tr>
+                  <tr>
+                    <td>Role</td>
+                    <td>Admin</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="tab-pane fade" id="email" role="tabpanel" aria-labelledby="profile-tab">...</div>
+            <div class="tab-pane fade" id="changePassword" role="tabpanel" aria-labelledby="contact-tab">...</div>
+            <div class="tab-pane fade" id="deleteAccount" role="tabpanel" aria-labelledby="contact-tab">...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}
