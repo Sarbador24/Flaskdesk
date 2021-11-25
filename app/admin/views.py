@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, redirect, request, url_for, flash
 from flask_login import current_user
 from sqlalchemy import or_
-from app.admin.forms import UserForm, TicketForm, TicketUpdateForm, CategoryForm, PriorityForm, StatusForm
+from app.admin.forms import UserForm, TicketForm, TicketUpdateForm, CategoryForm, PriorityForm, StatusForm, EmailUpdateForm, PasswordChangeForm
 from app.models import User, Ticket, Category, Priority, Status, Comment
 from app.decorators import login_required
 from app import db, bcrypt
@@ -264,7 +264,25 @@ def delete_user(id):
 		return redirect(url_for('admin.user'))
 	return redirect(url_for('admin.user'))
 
-@admin_blueprint.route('/account_settings')
+@admin_blueprint.route('/account_settings', methods=['GET', 'POST'])
 @login_required(role='admin')
 def account_settings():
-	return render_template('admin/account_settings.html')
+	user = User.query.filter(User.id == current_user.id)
+	email_form = EmailUpdateForm()
+	password_form = PasswordChangeForm()
+	if email_form.validate_on_submit():
+		user_id = User.query.get_or_404(request.form.get('id'))
+		user_id.email = email_form.email.data
+		db.session.commit()
+
+		flash('Email has been updated.', 'primary')
+		redirect(url_for('admin.account_settings'))
+	if password_form.validate_on_submit():
+		hashed_password = bcrypt.generate_password_hash(password_form.password.data).decode('utf-8')
+		user_id = User.query.get_or_404(request.form.get('id'))
+		user_id.password = hashed_password
+		db.session.commit()
+
+		flash('Password has been changed.', 'primary')
+		redirect(url_for('admin.account_settings'))
+	return render_template('admin/account_settings.html', user=user, email_form=email_form, password_form=password_form)
