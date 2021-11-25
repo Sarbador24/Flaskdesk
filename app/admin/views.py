@@ -127,7 +127,7 @@ def close_ticket(id, public_id):
 @admin_blueprint.route('/categories', methods=['GET', 'POST'])
 @login_required(role='admin')
 def category():
-	categories = Category.query.all()
+	categories = Category.query.order_by(Category.id.desc()).all()
 	form = CategoryForm()
 	if form.validate_on_submit():
 		category = Category(category=form.category.data)
@@ -163,7 +163,7 @@ def delete_category(id):
 @admin_blueprint.route('/priorities', methods=['GET', 'POST'])
 @login_required(role='admin')
 def priority():
-	priorities = Priority.query.all()
+	priorities = Priority.query.order_by(Priority.id.desc()).all()
 	form = PriorityForm()
 	if form.validate_on_submit():
 		priority = Priority(priority=form.priority.data)
@@ -199,7 +199,7 @@ def delete_priority(id):
 @admin_blueprint.route('/statuses', methods=['GET', 'POST'])
 @login_required(role='admin')
 def status():
-	statuses = Status.query.all()
+	statuses = Status.query.order_by(Status.id.desc()).all()
 	form = StatusForm()
 	if form.validate_on_submit():
 		status = Status(status=form.status.data)
@@ -233,8 +233,8 @@ def delete_status(id):
 	return redirect(url_for('admin.status'))
 
 @admin_blueprint.route('/user_management', methods=['GET', 'POST'])
-def user():	
-	users = User.query.filter(or_(User.role=='admin', User.role=='agent')).all()
+def user():
+	users = User.query.order_by(User.id.desc()).all()
 	form = UserForm()
 	if form.validate_on_submit():
 		public_id = str(uuid.uuid4())
