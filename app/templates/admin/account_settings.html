@@ -45,7 +45,30 @@
             </li>
           </ul>
           <div class="tab-content" id="pills-tabContent">
-            <div class="tab-pane fade show active" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">...</div>
+            <div class="tab-pane fade show active" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+              <table class="table table-bordered table-responsive-sm" style="border-style: hidden !important;">
+                <tbody>
+                  {% for row in user %}
+                    <tr>
+                      <td>Name</td>
+                      <td>{{ row.name }}</td>
+                    </tr>
+                    <tr>
+                      <td>Email</td>
+                      <td>{{ row.email }}</td>
+                    </tr>
+                    <tr>
+                      <td>Role</td>
+                      <td>{{ row.role.capitalize() }}</td>
+                    </tr>
+                    <tr>
+                      <td>Date Created</td>
+                      <td>{{ row.date_created.strftime('%B %d, %Y — %I:%M %p') }}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
             <div class="tab-pane fade" id="pills-email" role="tabpanel" aria-labelledby="pills-email-tab">
               <form action="{{ url_for('admin.account_settings') }}" method="POST" style="padding: 1.25rem;">
                 {{ email_form.csrf_token }}
