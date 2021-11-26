@@ -11,7 +11,16 @@
   <title>{% block title %}{% endblock %}</title>
 </head>
 <body class="my-login-page">
-  {% block content %}{% endblock %}
+
+  <section class="h-100">
+    <div class="container h-100">
+      <div class="row justify-content-md-center h-100">
+        <div class="card-wrapper">
+          {% block content %}{% endblock %}
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- Javascript library -->
   <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
