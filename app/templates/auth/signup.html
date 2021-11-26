@@ -1,91 +1,50 @@
+{% from 'includes/_render_input.html' import render_input %}
 {% extends 'layouts/auth.base.html' %}
-{% block title %}Flaskdesk — Sign up{% endblock %}
+{% block title %}Flaskdesk &mdash; Sign up{% endblock %}
 {% block content %}
 
-<section class="h-100">
-  <div class="container h-100">
-    <div class="row justify-content-md-center h-100">
-      <div class="card-wrapper">
-        <div class="brand">
-          <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="logo">
-        </div>
-        <div class="card fat">
-          <div class="card-body">
-            <h4 class="card-title">Sign up</h4>
-            <form action="{{ url_for('auth.signup') }}" method="POST" class="my-login-validation" novalidate="">
-              {{ form.csrf_token }}
-              <div class="form-group">
-                <label for="name">Name</label>
-                {% if form.name.errors %}
-                  {{ form.name(class="form-control is-invalid") }}
-                  {% for error in form.name.errors %}
-                    <div class="invalid-feedback">
-                      {{ error }}
-                    </div>
-                  {% endfor %}
-                {% else %}
-                  {{ form.name(class="form-control") }}
-                  <div class="invalid-feedback">What's your name?</div>
-                {% endif %}
-              </div>
-
-              <div class="form-group">
-                <label for="email">E-Mail Address</label>
-                {% if form.email.errors %}
-                  {{ form.email(class="form-control is-invalid") }}
-                  {% for error in form.email.errors %}
-                    <div class="invalid-feedback">
-                      {{ error }}
-                    </div>
-                  {% endfor %}
-                {% else %}
-                  {{ form.email(class="form-control") }}
-                  <div class="invalid-feedback">Email is invalid</div>
-                {% endif %}
-              </div>
-
-              <div class="form-group">
-                <label for="password">Password</label>
-                {% if form.password.errors %}
-                  {{ form.password(class="form-control is-invalid password-check", **{"data-eye": ""}) }}
-                  {% for error in form.password.errors %}
-                    <div class="invalid-feedback invalid-password">
-                      {{ error }}
-                    </div>
-                  {% endfor %}
-                {% else %}
-                  {{ form.password(class="form-control password-check", **{"data-eye": ""}) }}
-                  <div class="invalid-feedback invalid-password">Password must be between 6 and 32 characters long</div>
-                {% endif %}
-              </div>
-
-              <div class="form-group">
-                <div class="custom-checkbox custom-control">
-                  {{ form.agree(class="custom-control-input") }}
-                  <label for="agree" class="custom-control-label">
-                    I agree to the <a href="javascript:void(0)">Terms and Conditions</a>
-                  </label>
-                  <div class="invalid-feedback">
-                    You must agree with our Terms and Conditions
-                  </div>
-                </div>
-              </div>
-
-              <div class="form-group m-0">
-                <button type="submit" class="btn btn-primary btn-block">
-                  Sign up
-                </button>
-              </div>
-              <div class="mt-4 text-center">
-                Already have an account? <a href="{{ url_for('auth.login') }}">Login</a>
-              </div>
-            </form>
+<div class="brand">
+  <img src="{{ url_for('static', filename='images/logo.svg') }}" alt="logo">
+</div>
+<div class="card fat">
+  <div class="card-body">
+    <h4 class="card-title font-weight-bold">Sign up</h4>
+    <form action="{{ url_for('auth.signup') }}" method="POST" class="my-login-validation" novalidate="">
+      {{ form.csrf_token }}
+      <div class="form-group">
+        <label for="name">Name</label>
+        {{ render_input(form.name, "What's your name?") }}
+      </div>
+      <div class="form-group">
+        <label for="email">E-Mail Address</label>
+        {{ render_input(form.email, "Email is invalid") }}
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        {{ render_input(form.password, "Password must be 6 to 32 characters long", **{"data-eye": ""}) }}
+      </div>
+      <div class="form-group">
+        <div class="custom-checkbox custom-control">
+          {{ form.agree(class="custom-control-input") }}
+          <label for="agree" class="custom-control-label">
+            I agree to the <a href="javascript:void(0)">Terms and Conditions</a>
+          </label>
+          <div class="invalid-feedback">
+            You must agree with our Terms and Conditions
           </div>
         </div>
-        <div class="footer">Copyright &copy; 2021 &mdash; Flaskdesk</div>
       </div>
-    </div>
+      <div class="form-group m-0">
+        <button type="submit" class="btn btn-primary btn-block">Sign up</button>
+      </div>
+      <div class="mt-4 text-center">
+        Already have an account? <a href="{{ url_for('auth.login') }}">Login</a>
+      </div>
+    </form>
   </div>
-</section>
+</div>
+<div class="footer">
+  Copyright &copy; 2021 &mdash; <a href="https://www.linkedin.com/in/hazzillrodriguez/">Hazzill Rodriguez</a>
+</div>
 
 {% endblock %}
