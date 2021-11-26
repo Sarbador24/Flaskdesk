@@ -9,7 +9,7 @@ def send_reset_email(user):
 		sender=app.config['MAIL_USERNAME'],
 		recipients=[user.email]
 	)
-	message.body = f'''Dear User,
+	message.body = f'''Dear {user.name},
 
 To reset your password, visit the following link:
 {url_for('auth.reset_token', token=token, _external=True)}
