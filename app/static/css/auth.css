@@ -52,10 +52,6 @@ body.my-login-page {
   margin-bottom: 30px;
 }
 
-.my-login-page .form-control {
-  border-width: 2.3px;
-}
-
 .my-login-page .form-group label {
   width: 100%;
 }
