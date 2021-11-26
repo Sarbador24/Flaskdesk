@@ -18,19 +18,13 @@
 "use strict";
 
 $(function () {
-  // author badge :)
-  var author =
-    '<div style="position: fixed;bottom: 0;right: 20px;background-color: #fff;box-shadow: 0 4px 8px rgba(0,0,0,.05);border-radius: 3px 3px 0 0;font-size: 12px;padding: 5px 10px;">By <a href="https://twitter.com/mhdnauvalazhar">@mhdnauvalazhar</a> &nbsp;&bull;&nbsp; <a href="https://www.buymeacoffee.com/mhdnauvalazhar">Buy me a Coffee</a></div>';
-  $("body").append(author);
-
-  $("input[type='password'][data-eye]").each(function (i) {
+  $("input[type='password'][data-eye]").each(function(i) {
     var $this = $(this),
       id = "eye-password-" + i,
       el = $("#" + id);
 
-    $this.wrap(
-      $("<div/>", {
-        style: "position:relative",
+    $this.wrap($("<div/>", {
+        style: "position: relative",
         id: id,
       })
     );
@@ -38,8 +32,8 @@ $(function () {
     $this.css({
       paddingRight: 60,
     });
-    $this.after(
-      $("<div/>", {
+
+    $this.after($("<div/>", {
         html: "Show",
         class: "btn btn-primary btn-sm",
         id: "passeye-toggle-" + i,
@@ -53,8 +47,7 @@ $(function () {
       })
     );
 
-    $this.after(
-      $("<input/>", {
+    $this.after($("<input/>", {
         type: "hidden",
         id: "passeye-" + i,
       })
@@ -62,15 +55,16 @@ $(function () {
 
     var invalid_feedback = $this.parent().parent().find(".invalid-feedback");
 
-    if (invalid_feedback.length) {
+    if(invalid_feedback.length) {
       $this.after(invalid_feedback.clone());
     }
 
-    $this.on("keyup paste", function () {
+    $this.on("keyup paste", function() {
       $("#passeye-" + i).val($(this).val());
     });
-    $("#passeye-toggle-" + i).on("click", function () {
-      if ($this.hasClass("show")) {
+
+    $("#passeye-toggle-" + i).on("click", function() {
+      if($this.hasClass("show")) {
         $this.attr("type", "password");
         $this.removeClass("show");
         $(this).removeClass("btn-outline-primary");
@@ -83,19 +77,14 @@ $(function () {
     });
   });
 
-  $(".my-login-validation").submit(function () {
+  $(".my-login-validation").submit(function() {
     var form = $(this);
-    if (form[0].checkValidity() === false) {
+    var password = $("input[type='password'][data-eye]");
+    if(form[0].checkValidity() === false) {
       event.preventDefault();
-    } else if (
-      $(".password-check").val().length < 6 ||
-      $(".password-check").val().length > 32
-    ) {
-      $(".password-check").addClass("is-invalid");
-      $(".password-check").attr("style", "border-color: #dc3545 !important");
-      $(".invalid-password").html(
-        "Password must be between 6 and 32 characters long"
-      );
+    } else if($(password).val().length < 6 || $(password).val().length > 32) {
+      $(password).addClass("is-invalid");
+      $(password).attr("style", "border-color: #dc3545 !important");
       event.preventDefault();
     }
     form.addClass("was-validated");
