@@ -286,3 +286,14 @@ def account_settings():
 		flash('Password has been changed.', 'primary')
 		redirect(url_for('admin.account_settings'))
 	return render_template('admin/account_settings.html', user=user, email_form=email_form, password_form=password_form)
+
+@admin_blueprint.route('/account/delete/<int:id>', methods=['GET', 'POST'])
+@login_required(role='admin')
+def delete_account(id):
+	if request.method == 'POST':
+		user_id = User.query.get_or_404(id)
+		db.session.delete(user_id)
+		db.session.commit()
+		flash('Your account has been permanently deleted.', 'warning')
+		return redirect(url_for('auth.logout'))
+	return redirect(url_for('admin.account_settings'))
