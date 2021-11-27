@@ -1,0 +1,12 @@
+{% macro render_input(field, placeholder) %}
+  {% if field.errors %}
+    {{ field(class="form-control is-invalid", placeholder=placeholder, **kwargs) }}
+    {% for error in field.errors %}
+      <div class="invalid-feedback">
+        {{ error }}
+      </div>
+    {% endfor %}
+  {% else %}
+    {{ field(class="form-control", placeholder=placeholder, **kwargs) }}
+  {% endif %}
+{% endmacro %}

@@ -1,171 +1,115 @@
+{% from 'admin/_render_select.html' import render_select %}
 {% extends 'layouts/dashboard.base.html' %}
 {% block title %}Flaskdesk — Update Ticket{% endblock %}
 {% block content %}
 
-<div class="d-flex" id="wrapper">
-  <!-- Sidebar -->
-  {% include 'includes/sidebar.admin.html' %}
-
-  <!-- Website content -->
-  <div class="content">
-    <!-- Navbar top fixed -->
-    {% include 'includes/navbar.admin.html' %}
-
-    <!-- Content container -->
-    <div class="container-fluid">
-      <!-- Header -->
-      <div class="content-box mb-3 content-lighten">
-        <div class="row">
-          <div class="col-md-6">
-            <h3>Update Ticket</h3>
-          </div>
-          <div class="col-md-6">
-            <!--
-            <div class="text-right mt-1">
-              <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#createModal">
-                Create new
-              </button>
-            </div>
-            -->
-          </div>
-        </div>
-      </div>
-
-      <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-          <li class="breadcrumb-item"><a href="{{ url_for('admin.ticket') }}">Tickets</a></li>
-          <li class="breadcrumb-item active" aria-current="page">Update</li>
-        </ol>
-      </nav>
-
-      {% with messages = get_flashed_messages(with_categories=True) %}
-        {% if messages %}
-          {% for category, message in messages %}
-            <div class="alert alert-{{ category }}" role="alert">
-              {{ message }}
-            </div>
-          {% endfor %}
-        {% endif %}
-      {% endwith %}
-
-      <table class="table table-bordered table-responsive-sm ticket-view bg-white">
-        <tbody>
-          <form action="" method="POST">
-          {{ form.csrf_token }}
-          {% for row in ticket %}
-            <tr>
-              <td class="w-25">Date Created</td>
-              <td>{{ row.date_created.strftime('%B %d, %Y — %I:%M %p') }}</td>
-            </tr>
-            <tr>
-              <td>Ticket ID</td>
-              <td>{{ row.public_id }}</td>
-            </tr>
-            <tr>
-              <td>Author</td>
-              <td>{{ row.author.name }}</td>
-            </tr>
-            <tr>
-              <td>E-mail Address</td>
-              <td>{{ row.author.email }}</td>
-            </tr>
-            <tr>
-              <td>Subject</td>
-              <td>{{ row.subject }}</td>
-            </tr>
-            <tr>
-              <td>Body</td>
-              <td>
-                <div class="fr-view">
-                  {{ row.body|safe }}
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>Assign to</td>
-              <td>
-                <div class="form-group">
-                  <select class="custom-select" name="owner_id">
-                    <option value="">--- Please select agent ---</option>
-                    {% for user in users %}
-                      {% if user.id == row.owner.id %}
-                        <option value="{{ user.id }}" selected>
-                          {{ user.name }} — {{ user.role.capitalize() }}
-                        </option>
-                      {% else %}
-                        <option value="{{ user.id }}">
-                          {{ user.name }} — {{ user.role.capitalize() }}
-                        </option>
-                      {% endif %}
-                    {% endfor %}
-                  </select>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>Category</td>
-              <td>
-                <div class="form-group">
-                  {% if form.category.errors %}
-                    {{ form.category(class="custom-select is-invalid") }}
-                    {% for error in form.category.errors %}
-                      <div class="invalid-feedback">
-                        {{ error }}
-                      </div>
-                    {% endfor %}
-                  {% else %}
-                    {{ form.category(class="custom-select") }}
-                  {% endif %}
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>Priority</td>
-              <td>
-                <div class="form-group">
-                  {% if form.priority.errors %}
-                    {{ form.priority(class="custom-select is-invalid") }}
-                    {% for error in form.priority.errors %}
-                      <div class="invalid-feedback">
-                        {{ error }}
-                      </div>
-                    {% endfor %}
-                  {% else %}
-                    {{ form.priority(class="custom-select") }}
-                  {% endif %}
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td>Status</td>
-              <td>
-                <div class="form-group">
-                  {% if form.status.errors %}
-                    {{ form.status(class="custom-select is-invalid") }}
-                    {% for error in form.status.errors %}
-                      <div class="invalid-feedback">
-                        {{ error }}
-                      </div>
-                    {% endfor %}
-                  {% else %}
-                    {{ form.status(class="custom-select") }}
-                  {% endif %}
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td></td>
-              <td>
-                <button type="submit" class="btn btn-primary">Update</button>
-              </td>
-            </tr>
-          {% endfor %}
-          </form>
-        </tbody>
-      </table>
+<!-- Content container -->
+<div class="container-fluid">
+  <!-- Header -->
+  <div class="content-box mb-3 content-lighten">
+    <div class="row">
+      <h3>Update Ticket</h3>
     </div>
-
   </div>
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{{ url_for('admin.ticket') }}">Tickets</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Update</li>
+    </ol>
+  </nav>
+
+  <!-- Alert message -->
+  {% include 'includes/_flash_message.html' %}
+
+  <table class="table table-bordered table-responsive-sm ticket-view bg-white">
+    <tbody>
+      <form action="" method="POST">
+      {{ form.csrf_token }}
+      {% for row in ticket %}
+        <tr>
+          <td class="w-25">Date Created</td>
+          <td>{{ row.date_created.strftime('%B %d, %Y — %I:%M %p') }}</td>
+        </tr>
+        <tr>
+          <td>Ticket ID</td>
+          <td>{{ row.public_id }}</td>
+        </tr>
+        <tr>
+          <td>Author</td>
+          <td>{{ row.author.name }}</td>
+        </tr>
+        <tr>
+          <td>E-mail Address</td>
+          <td>{{ row.author.email }}</td>
+        </tr>
+        <tr>
+          <td>Subject</td>
+          <td>{{ row.subject }}</td>
+        </tr>
+        <tr>
+          <td>Body</td>
+          <td>
+            <div class="fr-view">
+              {{ row.body|safe }}
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>Assign to</td>
+          <td>
+            <div class="form-group">
+              <select class="custom-select" name="owner_id">
+                <option value="">--- Please select agent ---</option>
+                {% for user in users %}
+                  {% if user.id == row.owner.id %}
+                    <option value="{{ user.id }}" selected>
+                      {{ user.name }} — {{ user.role.capitalize() }}
+                    </option>
+                  {% else %}
+                    <option value="{{ user.id }}">
+                      {{ user.name }} — {{ user.role.capitalize() }}
+                    </option>
+                  {% endif %}
+                {% endfor %}
+              </select>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>Category</td>
+          <td>
+            <div class="form-group">
+              {{ render_select(form.category) }}
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>Priority</td>
+          <td>
+            <div class="form-group">
+              {{ render_select(form.priority) }}
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>Status</td>
+          <td>
+            <div class="form-group">
+              {{ render_select(form.status) }}
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>
+            <button type="submit" class="btn btn-primary">Update</button>
+          </td>
+        </tr>
+      {% endfor %}
+      </form>
+    </tbody>
+  </table>
 </div>
 
 {% endblock %}

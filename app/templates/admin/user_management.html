@@ -1,161 +1,108 @@
+{% from 'admin/_render_input.html' import render_input %}
+{% from 'admin/_render_select.html' import render_select %}
 {% extends 'layouts/dashboard.base.html' %}
 {% block title %}Flaskdesk — User Management{% endblock %}
 {% block content %}
 
-<div class="d-flex" id="wrapper">
-  <!-- Sidebar -->
-  {% include 'includes/sidebar.admin.html' %}
+<!-- Content container -->
+<div class="container-fluid">
+  <!-- Header -->
+  <div class="content-box mb-3 content-lighten">
+    <div class="row">
+      <div class="col-md-6">
+        <h3>User Management</h3>
+      </div>
+      <div class="col-md-6">
+        <div class="text-right mt-1">
+          <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#createModal">
+            Create new
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <!-- Website content -->
-  <div class="content">
-    <!-- Navbar top fixed -->
-    {% include 'includes/navbar.admin.html' %}
+  <!-- Alert message -->
+  {% include 'includes/_flash_message.html' %}
 
-    <!-- Content container -->
-    <div class="container-fluid">
-      <!-- Header -->
-      <div class="content-box mb-3 content-lighten">
-        <div class="row">
-          <div class="col-md-6">
-            <h3>User Management</h3>
-          </div>
-          <div class="col-md-6">
-            <div class="text-right mt-1">
-              <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#createModal">
-                Create new
+  <table id="table" class="table table-striped table-responsive-sm bg-white">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in users %}
+      <tr>
+        <td>{{ row.name }}</td>
+        <td>{{ row.email }}</td>
+        <td>{{ row.role.capitalize() }}</td>
+        <td>
+          <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal{{ row.id }}">
+            <i class="fa fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+      <!-- Delete Modal -->
+      <div class="modal fade" id="deleteModal{{ row.id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ row.id }}" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="deleteModalLabel{{ row.id }}">Delete Confirmation</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
               </button>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure you want to delete this user? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <form action="{{ url_for('admin.delete_user', id=row.id) }}" method="POST" role="form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="submit" class="btn btn-danger" value="Delete">
+              </form>
             </div>
           </div>
         </div>
       </div>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 
-      {% with messages = get_flashed_messages(with_categories=True) %}
-        {% if messages %}
-          {% for category, message in messages %}
-            <div class="alert alert-{{ category }}" role="alert">
-              {{ message }}
-            </div>
-          {% endfor %}
-        {% endif %}
-      {% endwith %}
-
-      <table id="table" class="table table-striped table-responsive-sm bg-white">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for row in users %}
-          <tr>
-            <td>{{ row.name }}</td>
-            <td>{{ row.email }}</td>
-            <td>{{ row.role.capitalize() }}</td>
-            <td>
-              <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal{{ row.id }}">
-                <i class="fa fa-trash"></i>
-              </button>
-            </td>
-          </tr>
-          <!-- Delete Modal -->
-          <div class="modal fade" id="deleteModal{{ row.id }}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel{{ row.id }}" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="deleteModalLabel{{ row.id }}">Delete Confirmation</h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <p>Are you sure you want to delete this user? This action cannot be undone.</p>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                  <form action="{{ url_for('admin.delete_user', id=row.id) }}" method="POST" role="form">
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                    <input type="submit" class="btn btn-danger" value="Delete">
-                  </form>
-                </div>
-              </div>
-            </div>
+<!-- Create Modal -->
+<div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createModalLabel">Create New</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action="{{ url_for('admin.user') }}" method="POST">
+          {{ form.csrf_token }}
+          <div class="form-group">
+            {{ render_input(form.name, "Name") }}
           </div>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-
-    <!-- Create Modal -->
-    <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-sm">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="createModalLabel">Create New</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+          <div class="form-group">
+            {{ render_input(form.email, "Email") }}
           </div>
-          <div class="modal-body">
-            <form action="{{ url_for('admin.user') }}" method="POST">
-              {{ form.csrf_token }}
-              <div class="form-group">
-                {% if form.name.errors %}
-                  {{ form.name(class="form-control is-invalid", placeholder="Name") }}
-                  {% for error in form.name.errors %}
-                    <div class="invalid-feedback">
-                      {{ error }}
-                    </div>
-                  {% endfor %}
-                {% else %}
-                  {{ form.name(class="form-control", placeholder="Name") }}
-                {% endif %}
-              </div>
-              <div class="form-group">
-                {% if form.email.errors %}
-                  {{ form.email(class="form-control is-invalid", placeholder="Email") }}
-                  {% for error in form.email.errors %}
-                    <div class="invalid-feedback">
-                      {{ error }}
-                    </div>
-                  {% endfor %}
-                {% else %}
-                  {{ form.email(class="form-control", placeholder="Email") }}
-                {% endif %}
-              </div>
-              <div class="form-group">
-                {% if form.password.errors %}
-                  {{ form.password(class="form-control is-invalid", placeholder="Password") }}
-                  {% for error in form.password.errors %}
-                    <div class="invalid-feedback">
-                      {{ error }}
-                    </div>
-                  {% endfor %}
-                {% else %}
-                  {{ form.password(class="form-control", placeholder="Password") }}
-                {% endif %}
-              </div>
-              <div class="form-group">
-                {% if form.role.errors %}
-                  {{ form.role(class="custom-select is-invalid") }}
-                  {% for error in form.role.errors %}
-                    <div class="invalid-feedback">
-                      {{ error }}
-                    </div>
-                  {% endfor %}
-                {% else %}
-                  {{ form.role(class="custom-select") }}
-                {% endif %}
-              </div>
-              <button type="submit" class="btn btn-primary">Create</button>
-            </form>
+          <div class="form-group">
+            {{ render_input(form.password, "Password") }}
           </div>
-        </div>
+          <div class="form-group">
+            {{ render_select(form.role) }}
+          </div>
+          <button type="submit" class="btn btn-primary">Create</button>
+        </form>
       </div>
     </div>
-
   </div>
 </div>
 
