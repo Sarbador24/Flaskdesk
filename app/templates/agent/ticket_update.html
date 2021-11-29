@@ -58,45 +58,53 @@
         <tr>
           <td>Assign to</td>
           <td>
-            <div class="form-group">
-              <select class="custom-select" name="owner_id">
-                <option value="">--- Please select agent ---</option>
-                {% for user in users %}
-                  {% if user.id == row.owner.id %}
-                    <option value="{{ user.id }}" selected>
-                      {{ user.name }} — {{ user.role.capitalize() }}
-                    </option>
-                  {% else %}
-                    <option value="{{ user.id }}">
-                      {{ user.name }} — {{ user.role.capitalize() }}
-                    </option>
-                  {% endif %}
-                {% endfor %}
-              </select>
+            <div class="form-group row">
+              <div class="col-md-5">
+                <select class="custom-select" name="owner_id">
+                  <option value="">--- Please select agent ---</option>
+                  {% for user in users %}
+                    {% if user.id == row.owner.id %}
+                      <option value="{{ user.id }}" selected>
+                        {{ user.name }} — {{ user.role.capitalize() }}
+                      </option>
+                    {% else %}
+                      <option value="{{ user.id }}">
+                        {{ user.name }} — {{ user.role.capitalize() }}
+                      </option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
             </div>
           </td>
         </tr>
         <tr>
           <td>Category</td>
           <td>
-            <div class="form-group">
-              {{ render_select(form.category) }}
+            <div class="form-group row">
+              <div class="col-md-5">
+                {{ render_select(form.category) }}
+              </div>
             </div>
           </td>
         </tr>
         <tr>
           <td>Priority</td>
           <td>
-            <div class="form-group">
-              {{ render_select(form.priority) }}
+            <div class="form-group row">
+              <div class="col-md-5">
+                {{ render_select(form.priority) }}
+              </div>
             </div>
           </td>
         </tr>
         <tr>
           <td>Status</td>
           <td>
-            <div class="form-group">
-              {{ render_select(form.status) }}
+            <div class="form-group row">
+              <div class="col-md-5">
+                {{ render_select(form.status) }}
+              </div>
             </div>
           </td>
         </tr>
