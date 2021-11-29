@@ -1,6 +1,15 @@
 <nav class="navbar navbar-expand-lg fixed-top navbar-lighten">
   <!-- Navbar title -->
-  <a class="navbar-brand navbar-link text-uppercase" href="{{ url_for('admin.dashboard') }}">
+  <a class="navbar-brand navbar-link text-uppercase"
+    href="
+    {% if current_user.role == 'admin' %}
+      {{ url_for('admin.dashboard') }}
+    {% elif current_user.role == 'agent' %}
+      {{ url_for('agent.dashboard') }}
+    {% elif current_user.role == 'user' %}
+      {{ url_for('user.dashboard') }}
+    {% endif %}
+    ">
     <strong>Flask</strong>desk
   </a>
 
@@ -17,13 +26,21 @@
       <a href="javascript:void(0)" data-toggle="dropdown" class="dropdown-logged-toggle dropdown-link">
         <span class="dropdown-user float-left">Administrator</span>
       </a>
-
       <div class="dropdown-menu dropdown-logged-menu dropdown-menu-right border-0 dropdown-menu-lighten">
         <div class="dropdown-menu-arrow"></div>
         <a class="dropdown-item dropdown-logged-item" href="#">
           <i class="fa fa-user" aria-hidden="true"></i>Your profile
         </a>
-        <a class="dropdown-item dropdown-logged-item" href="{{ url_for('admin.account_settings') }}">
+        <a class="dropdown-item dropdown-logged-item"
+          href="
+          {% if current_user.role == 'admin' %}
+            {{ url_for('admin.account_settings') }}
+          {% elif current_user.role == 'agent' %}
+            {{ url_for('agent.account_settings') }}
+          {% elif current_user.role == 'user' %}
+            {{ url_for('user.account_settings') }}
+          {% endif %}
+          ">
           <i class="fa fa-cog" aria-hidden="true"></i>Account settings
         </a>
         <div class="dropdown-divider border-light"></div>
