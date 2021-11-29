@@ -14,6 +14,8 @@ def login():
 	# If user is already authenticated redirect to designated page
 	if current_user.is_authenticated and current_user.role == 'admin':
 		return redirect_dest(fallback=url_for('admin.dashboard'))
+	elif current_user.is_authenticated and current_user.role == 'agent':
+		return redirect_dest(fallback=url_for('agent.dashboard'))
 	elif current_user.is_authenticated and current_user.role == 'user':
 		return redirect_dest(fallback=url_for('user.dashboard'))
 
@@ -23,6 +25,9 @@ def login():
 		if user and bcrypt.check_password_hash(user.password, form.password.data) and user.role == 'admin':
 			login_user(user, remember=form.remember.data)
 			return redirect_dest(fallback=url_for('admin.dashboard'))
+		elif user and bcrypt.check_password_hash(user.password, form.password.data) and user.role == 'agent':
+			login_user(user, remember=form.remember.data)
+			return redirect_dest(fallback=url_for('agent.dashboard'))
 		elif user and bcrypt.check_password_hash(user.password, form.password.data) and user.role == 'user':
 			login_user(user, remember=form.remember.data)
 			return redirect_dest(fallback=url_for('user.dashboard'))
@@ -34,6 +39,8 @@ def login():
 def signup():
 	if current_user.is_authenticated and current_user.role == 'admin':
 		return redirect_dest(fallback=url_for('admin.dashboard'))
+	elif current_user.is_authenticated and current_user.role == 'agent':
+		return redirect_dest(fallback=url_for('agent.dashboard'))
 	elif current_user.is_authenticated and current_user.role == 'user':
 		return redirect_dest(fallback=url_for('user.dashboard'))
 		
@@ -65,6 +72,8 @@ def logout():
 def reset_request():
 	if current_user.is_authenticated and current_user.role == 'admin':
 		return redirect_dest(fallback=url_for('admin.dashboard'))
+	elif current_user.is_authenticated and current_user.role == 'agent':
+		return redirect_dest(fallback=url_for('agent.dashboard'))
 	elif current_user.is_authenticated and current_user.role == 'user':
 		return redirect_dest(fallback=url_for('user.dashboard'))
 
@@ -80,6 +89,8 @@ def reset_request():
 def reset_token(token):
 	if current_user.is_authenticated and current_user.role == 'admin':
 		return redirect_dest(fallback=url_for('admin.dashboard'))
+	elif current_user.is_authenticated and current_user.role == 'agent':
+		return redirect_dest(fallback=url_for('agent.dashboard'))
 	elif current_user.is_authenticated and current_user.role == 'user':
 		return redirect_dest(fallback=url_for('user.dashboard'))
 

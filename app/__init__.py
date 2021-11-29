@@ -20,10 +20,12 @@ csrf = CSRFProtect(app)
 
 from app.auth.views import auth_blueprint
 from app.admin.views import admin_blueprint
+from app.agent.views import agent_blueprint
 from app.user.views import user_blueprint
 
 app.register_blueprint(auth_blueprint)
 app.register_blueprint(admin_blueprint, url_prefix='/admin')
+app.register_blueprint(agent_blueprint, url_prefix='/agent')
 app.register_blueprint(user_blueprint, url_prefix='/user')
 
 @app.route('/')
