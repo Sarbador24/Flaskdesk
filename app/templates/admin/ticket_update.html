@@ -1,4 +1,4 @@
-{% from 'admin/_render_select.html' import render_select %}
+{% from 'macros/_render_select.html' import render_select %}
 {% extends 'layouts/dashboard.base.html' %}
 {% block title %}Flaskdesk — Update Ticket{% endblock %}
 {% block content %}
@@ -20,7 +20,7 @@
   </nav>
 
   <!-- Alert message -->
-  {% include 'includes/_flash_message.html' %}
+  {% include 'includes/alert.html' %}
 
   <table class="table table-bordered table-responsive-sm ticket-view bg-white">
     <tbody>

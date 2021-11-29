@@ -1,5 +1,5 @@
-{% from 'admin/_render_input.html' import render_input %}
-{% from 'admin/_render_select.html' import render_select %}
+{% from 'macros/_render_input.html' import render_input %}
+{% from 'macros/_render_select.html' import render_select %}
 {% extends 'layouts/dashboard.base.html' %}
 {% block title %}Flaskdesk — Tickets{% endblock %}
 {% block content %}
@@ -23,7 +23,7 @@
   </div>
 
   <!-- Alert message -->
-  {% include 'includes/_flash_message.html' %}
+  {% include 'includes/alert.html' %}
 
   <table id="table" class="table table-striped table-responsive-sm bg-white">
     <thead>

@@ -1,4 +1,4 @@
-{% from 'admin/_render_input.html' import render_input %}
+{% from 'macros/_render_input.html' import render_input %}
 {% extends 'layouts/dashboard.base.html' %}
 {% block title %}Flaskdesk — Account Settings{% endblock %}
 {% block content %}
@@ -11,7 +11,7 @@
   </div>
 
   <!-- Alert message -->
-  {% include 'includes/_flash_message.html' %}
+  {% include 'includes/alert.html' %}
 
   <div class="card border-0">
     <div class="card-body">
