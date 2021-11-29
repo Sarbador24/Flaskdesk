@@ -1,4 +1,4 @@
-{% from 'auth/_render_input.html' import render_input %}
+{% from 'macros/_render_input.auth.html' import render_input %}
 {% extends 'layouts/auth.base.html' %}
 {% block title %}Flaskdesk &mdash; Login{% endblock %}
 {% block content %}
@@ -10,7 +10,7 @@
   <div class="card-body">
     <h4 class="card-title font-weight-bold">Login</h4>
     <!-- Alert message -->
-    {% include 'includes/_flash_message.html' %}
+    {% include 'includes/alert.html' %}
 
     <form action="{{ url_for('auth.login', next=request.args.get('next')) }}" method="POST" class="my-login-validation" novalidate="">
       {{ form.csrf_token }}
