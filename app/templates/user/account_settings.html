@@ -1,0 +1,101 @@
+{% from 'macros/_render_input.html' import render_input %}
+{% extends 'layouts/dashboard.base.html' %}
+{% block title %}Flaskdesk — Account Settings{% endblock %}
+{% block content %}
+
+<!-- Content container -->
+<div class="container-fluid">
+  <!-- Header -->
+  <div class="content-box mb-3 content-lighten">
+    <h3>Account Settings</h3>
+  </div>
+
+  <!-- Alert message -->
+  {% include 'includes/alert.html' %}
+
+  <div class="card border-0">
+    <div class="card-body">
+      <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+        <li class="nav-item">
+          <a class="nav-link active" id="pills-email-tab" data-toggle="pill" href="#pills-email" role="tab" aria-controls="pills-email" aria-selected="true">Email</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="pills-password-tab" data-toggle="pill" href="#pills-password" role="tab" aria-controls="pills-password" aria-selected="false">Password</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="pills-delete-tab" data-toggle="pill" href="#pills-delete" role="tab" aria-controls="pills-delete" aria-selected="false">Delete Account</a>
+        </li>
+      </ul>
+      <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-email" role="tabpanel" aria-labelledby="pills-email-tab">
+          <form action="{{ url_for('admin.account_settings') }}" method="POST" style="padding: 1.25rem;">
+            {{ email_form.csrf_token }}
+            <div class="form-group row">
+              {% for row in user %}
+                <input type="hidden" name="id" value="{{ row.id }}">
+                <label for="email" class="col-sm-2 col-form-label">Email Address</label>
+                <div class="col-sm-5">
+                  {{ render_input(email_form.email, "Email", value=row.email) }}
+                </div>
+              {% endfor %}
+            </div>
+            <button type="submit" class="btn btn-outline-secondary mt-2">Update</button>
+          </form>
+        </div>
+        <div class="tab-pane fade" id="pills-password" role="tabpanel" aria-labelledby="pills-password-tab">
+          <form action="{{ url_for('admin.account_settings') }}" method="POST" style="padding: 1.25rem;">
+            {{ password_form.csrf_token }}
+            <div class="form-group row">
+              <input type="hidden" name="id" value="{{ current_user.id }}">
+              <label for="password" class="col-sm-2 col-form-label">New Password</label>
+              <div class="col-sm-5">
+                {{ render_input(password_form.password, "New Password") }}
+              </div>
+            </div>
+            <div class="form-group row">
+              <label for="confirm_password" class="col-sm-2 col-form-label">Confirm Password</label>
+              <div class="col-sm-5">
+                {{ render_input(password_form.confirm_password, "Confirm Password") }}
+              </div>
+            </div>
+            <button type="submit" class="btn btn-outline-secondary mt-2">Change Password</button>
+          </form>
+        </div>
+        <div class="tab-pane fade" id="pills-delete" role="tabpanel" aria-labelledby="pills-delete-tab">
+          <div style="padding: 1.25rem;">
+            <p><b>Warning: </b>Once you delete your account, there is no going back. Please be certain.</p>
+            <button type="button" class="btn btn-outline-danger" data-toggle="modal" data-target="#deleteModal">
+              Delete Account
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Delete Confirmation</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure that you want to delete your account? This will immediately log you out of your account and you will not be able to log in again.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <form action="{{ url_for('admin.delete_account', id=current_user.id) }}" method="POST" role="form">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="submit" class="btn btn-danger" value="Delete">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

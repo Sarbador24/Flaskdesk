@@ -1,0 +1,123 @@
+{% from 'macros/_render_select.html' import render_select %}
+{% extends 'layouts/dashboard.base.html' %}
+{% block title %}Flaskdesk — Update Ticket{% endblock %}
+{% block content %}
+
+<!-- Content container -->
+<div class="container-fluid">
+  <!-- Header -->
+  <div class="content-box mb-3 content-lighten">
+    <div class="row">
+      <h3>Update Ticket</h3>
+    </div>
+  </div>
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{{ url_for('admin.ticket') }}">Tickets</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Update</li>
+    </ol>
+  </nav>
+
+  <!-- Alert message -->
+  {% include 'includes/alert.html' %}
+
+  <table class="table table-bordered table-responsive-sm ticket-view bg-white">
+    <tbody>
+      <form action="" method="POST">
+      {{ form.csrf_token }}
+      {% for row in ticket %}
+        <tr>
+          <td class="w-25">Date Created</td>
+          <td>{{ row.date_created.strftime('%B %d, %Y — %I:%M %p') }}</td>
+        </tr>
+        <tr>
+          <td>Ticket ID</td>
+          <td>{{ row.public_id }}</td>
+        </tr>
+        <tr>
+          <td>Author</td>
+          <td>{{ row.author.name }}</td>
+        </tr>
+        <tr>
+          <td>E-mail Address</td>
+          <td>{{ row.author.email }}</td>
+        </tr>
+        <tr>
+          <td>Subject</td>
+          <td>{{ row.subject }}</td>
+        </tr>
+        <tr>
+          <td>Body</td>
+          <td>
+            <div class="fr-view">
+              {{ row.body|safe }}
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>Assign to</td>
+          <td>
+            <div class="form-group row">
+              <div class="col-md-5">
+                <select class="custom-select" name="owner_id">
+                  <option value="">--- Please select agent ---</option>
+                  {% for user in users %}
+                    {% if user.id == row.owner.id %}
+                      <option value="{{ user.id }}" selected>
+                        {{ user.name }} — {{ user.role.capitalize() }}
+                      </option>
+                    {% else %}
+                      <option value="{{ user.id }}">
+                        {{ user.name }} — {{ user.role.capitalize() }}
+                      </option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>Category</td>
+          <td>
+            <div class="form-group row">
+              <div class="col-md-5">
+                {{ render_select(form.category) }}
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>Priority</td>
+          <td>
+            <div class="form-group row">
+              <div class="col-md-5">
+                {{ render_select(form.priority) }}
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>Status</td>
+          <td>
+            <div class="form-group row">
+              <div class="col-md-5">
+                {{ render_select(form.status) }}
+              </div>
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>
+            <button type="submit" class="btn btn-primary">Update</button>
+          </td>
+        </tr>
+      {% endfor %}
+      </form>
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

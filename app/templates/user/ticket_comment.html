@@ -1,0 +1,132 @@
+{% extends 'layouts/dashboard.base.html' %}
+{% block title %}Flaskdesk — Comments{% endblock %}
+{% block content %}
+
+<!-- Content container -->
+<div class="container-fluid">
+  <!-- Header -->
+  <div class="content-box mb-3 content-lighten">
+    <div class="row">
+      <h3>Comments</h3>
+    </div>
+  </div>
+
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item"><a href="{{ url_for('admin.ticket') }}">Tickets</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Comments</li>
+    </ol>
+  </nav>
+
+  <!-- Alert message -->
+  {% include 'includes/alert.html' %}
+
+  <table class="table table-bordered table-responsive-sm ticket-view bg-white">
+    <tbody>
+      {% for row in ticket %}
+        <tr>
+          <td class="w-25">Date Created</td>
+          <td>{{ row.date_created.strftime('%B %d, %Y — %I:%M %p') }}</td>
+        </tr>
+        <tr>
+          <td>Ticket ID</td>
+          <td>{{ row.public_id }}</td>
+        </tr>
+        <tr>
+          <td>Author</td>
+          <td>{{ row.author.name }}</td>
+        </tr>
+        <tr>
+          <td>E-mail Address</td>
+          <td>{{ row.author.email }}</td>
+        </tr>
+        <tr>
+          <td>Subject</td>
+          <td>{{ row.subject }}</td>
+        </tr>
+        <tr>
+          <td>Body</td>
+          <td>
+            <div class="fr-view">
+              {{ row.body|safe }}
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td>Assigned to</td>
+          <td>{{ row.owner.name }}</td>
+        </tr>
+        <tr>
+          <td>Category</td>
+          <td>{{ row.category.category }}</td>
+        </tr>
+        <tr>
+          <td>Priority</td>
+          <td>{{ row.priority.priority }}</td>
+        </tr>
+        <tr>
+          <td>Status</td>
+          <td>{{ row.status.status }}</td>
+        </tr>
+        <tr>
+          <td>Comments</td>
+          <td>
+            {% for comment in comments %}
+              {% if comment.user.role == 'admin' or comment.user.role == 'agent' %}
+                <div class="text-left">
+                  <i class="fa fa-user-circle fa-lg text-secondary"></i>
+                  <small>
+                    <b>{{ comment.user.name }}</b>
+                    <span> &bull; </span>
+                    {{ comment.date_created.strftime('%m/%d/%Y, %I:%M %p') }}
+                  </small>
+                </div>
+                <div class="alert text-left mb-2">
+                  {{ comment.comment|safe }}
+                </div>
+              {% else %}
+                <div class="text-left">
+                  <i class="fa fa-user-circle fa-lg text-secondary"></i>
+                  <small>
+                    <b>{{ comment.user.name }}</b>
+                    <span> &bull; </span>
+                    {{ comment.date_created.strftime('%m/%d/%Y, %I:%M %p') }}
+                  </small>
+                </div>
+                <div class="alert text-left mb-2">
+                  {{ comment.comment|safe }}
+                </div>
+              {% endif %}
+            {% endfor %}
+          
+            {% if row.status.status != 'Closed' %}
+              <form action="{{ url_for('admin.comment', id=row.id, public_id=row.public_id) }}" method="POST">
+                <div class="form-group">
+                  <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                  <input type="hidden" name="author_id" value="{{ current_user.id }}">
+                  <input type="hidden" name="ticket_id" value="{{ row.id }}">
+                  <textarea class="form-control" id="comment" name="comment" placeholder="Leave a comment..." rows="8" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary float-left">Send</button>
+              </form>
+
+              <form action="{{ url_for('admin.close_ticket', id=row.id, public_id=row.public_id) }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="status_id" value="4">
+                <button type="submit" class="btn btn-danger float-right">Close Ticket</button>
+              </form>
+            {% else %}
+              <form action="{{ url_for('admin.open_ticket', id=row.id, public_id=row.public_id) }}" method="POST">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="status_id" value="1">
+                <button type="submit" class="btn btn-primary float-right">Re-open Ticket</button>
+              </form>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
