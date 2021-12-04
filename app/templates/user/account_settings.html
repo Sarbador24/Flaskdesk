@@ -28,7 +28,7 @@
       </ul>
       <div class="tab-content" id="pills-tabContent">
         <div class="tab-pane fade show active" id="pills-email" role="tabpanel" aria-labelledby="pills-email-tab">
-          <form action="{{ url_for('admin.account_settings') }}" method="POST" style="padding: 1.25rem;">
+          <form action="{{ url_for('user.account_settings') }}" method="POST" style="padding: 1.25rem;">
             {{ email_form.csrf_token }}
             <div class="form-group row">
               {% for row in user %}
@@ -43,7 +43,7 @@
           </form>
         </div>
         <div class="tab-pane fade" id="pills-password" role="tabpanel" aria-labelledby="pills-password-tab">
-          <form action="{{ url_for('admin.account_settings') }}" method="POST" style="padding: 1.25rem;">
+          <form action="{{ url_for('user.account_settings') }}" method="POST" style="padding: 1.25rem;">
             {{ password_form.csrf_token }}
             <div class="form-group row">
               <input type="hidden" name="id" value="{{ current_user.id }}">
@@ -89,7 +89,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <form action="{{ url_for('admin.delete_account', id=current_user.id) }}" method="POST" role="form">
+        <form action="{{ url_for('user.delete_account', id=current_user.id) }}" method="POST" role="form">
           <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
           <input type="submit" class="btn btn-danger" value="Delete">
         </form>

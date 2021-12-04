@@ -38,9 +38,11 @@
                     {{ url_for('user.ticket') }}
                   {% endif %}" class="list-link">Tickets</a>
               </li>
+              {% if current_user.role != 'user' %}
               <li>
                 <a href="#" class="list-link">Custom replies</a>
               </li>
+              {% endif %}
               {% if current_user.role == 'admin' %}
               <li>
                 <a href="javascript:void(0)" class="list-link link-arrow link-current">General</a>

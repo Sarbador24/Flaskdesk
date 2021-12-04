@@ -29,7 +29,6 @@
     <thead>
       <tr>
         <th>ID</th>
-        <th>Author</th>
         <th>Subject</th>
         <th>Assigned to</th>
         <th>Priority</th>
@@ -41,13 +40,8 @@
       {% for row in tickets %}
       <tr>
         <td>
-          <a href="{{ url_for('admin.comment', id=row.id, public_id=row.public_id) }}">
+          <a href="{{ url_for('user.comment', id=row.id, public_id=row.public_id) }}">
             {{ row.public_id[:6] }}
-          </a>
-        </td>
-        <td>
-          <a href="{{ url_for('admin.comment', id=row.id, public_id=row.public_id) }}">
-            {{ row.author.name }}
           </a>
         </td>
         <td>{{ row.subject[:32] }}</td>
@@ -55,7 +49,7 @@
         <td>{{ row.priority.priority }}</td>
         <td>{{ row.status.status }}</td>
         <td>
-          <a href="{{ url_for('admin.update_ticket', id=row.id, public_id=row.public_id) }}" class="btn btn-sm btn-primary">
+          <a href="{{ url_for('user.update_ticket', id=row.id, public_id=row.public_id) }}" class="btn btn-sm btn-primary">
             <i class="fa fa-edit"></i>
           </a>
           <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteModal{{ row.id }}">
@@ -78,7 +72,7 @@
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <form action="{{ url_for('admin.delete_ticket', id=row.id) }}" method="POST" role="form">
+              <form action="{{ url_for('user.delete_ticket', id=row.id) }}" method="POST" role="form">
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <input type="submit" class="btn btn-danger" value="Delete">
               </form>
@@ -102,7 +96,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form action="{{ url_for('admin.ticket') }}" method="POST">
+        <form action="{{ url_for('user.ticket') }}" method="POST">
           {{ form.csrf_token }}
           <div class="form-group">
             {{ render_input(form.subject, "Subject") }}

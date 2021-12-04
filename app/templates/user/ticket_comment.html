@@ -13,7 +13,7 @@
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="{{ url_for('admin.ticket') }}">Tickets</a></li>
+      <li class="breadcrumb-item"><a href="{{ url_for('user.ticket') }}">Tickets</a></li>
       <li class="breadcrumb-item active" aria-current="page">Comments</li>
     </ol>
   </nav>
@@ -100,7 +100,7 @@
             {% endfor %}
           
             {% if row.status.status != 'Closed' %}
-              <form action="{{ url_for('admin.comment', id=row.id, public_id=row.public_id) }}" method="POST">
+              <form action="{{ url_for('user.comment', id=row.id, public_id=row.public_id) }}" method="POST">
                 <div class="form-group">
                   <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                   <input type="hidden" name="author_id" value="{{ current_user.id }}">
@@ -108,18 +108,6 @@
                   <textarea class="form-control" id="comment" name="comment" placeholder="Leave a comment..." rows="8" required></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary float-left">Send</button>
-              </form>
-
-              <form action="{{ url_for('admin.close_ticket', id=row.id, public_id=row.public_id) }}" method="POST">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <input type="hidden" name="status_id" value="4">
-                <button type="submit" class="btn btn-danger float-right">Close Ticket</button>
-              </form>
-            {% else %}
-              <form action="{{ url_for('admin.open_ticket', id=row.id, public_id=row.public_id) }}" method="POST">
-                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-                <input type="hidden" name="status_id" value="1">
-                <button type="submit" class="btn btn-primary float-right">Re-open Ticket</button>
               </form>
             {% endif %}
           </td>

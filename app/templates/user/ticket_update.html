@@ -14,7 +14,7 @@
 
   <nav aria-label="breadcrumb">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="{{ url_for('admin.ticket') }}">Tickets</a></li>
+      <li class="breadcrumb-item"><a href="{{ url_for('user.ticket') }}">Tickets</a></li>
       <li class="breadcrumb-item active" aria-current="page">Update</li>
     </ol>
   </nav>
@@ -56,27 +56,8 @@
           </td>
         </tr>
         <tr>
-          <td>Assign to</td>
-          <td>
-            <div class="form-group row">
-              <div class="col-md-5">
-                <select class="custom-select" name="owner_id">
-                  <option value="">--- Please select agent ---</option>
-                  {% for user in users %}
-                    {% if user.id == row.owner.id %}
-                      <option value="{{ user.id }}" selected>
-                        {{ user.name }} — {{ user.role.capitalize() }}
-                      </option>
-                    {% else %}
-                      <option value="{{ user.id }}">
-                        {{ user.name }} — {{ user.role.capitalize() }}
-                      </option>
-                    {% endif %}
-                  {% endfor %}
-                </select>
-              </div>
-            </div>
-          </td>
+          <td>Assigned to</td>
+          <td>{{ row.owner.name }}</td>
         </tr>
         <tr>
           <td>Category</td>
@@ -90,23 +71,11 @@
         </tr>
         <tr>
           <td>Priority</td>
-          <td>
-            <div class="form-group row">
-              <div class="col-md-5">
-                {{ render_select(form.priority) }}
-              </div>
-            </div>
-          </td>
+          <td>{{ row.priority.priority }}</td>
         </tr>
         <tr>
           <td>Status</td>
-          <td>
-            <div class="form-group row">
-              <div class="col-md-5">
-                {{ render_select(form.status) }}
-              </div>
-            </div>
-          </td>
+          <td>{{ row.status.status }}</td>
         </tr>
         <tr>
           <td></td>
