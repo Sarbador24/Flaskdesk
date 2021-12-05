@@ -1,3 +1,4 @@
+{% from 'macros/_dashboard_cards.html' import dashboard_cards %}
 {% extends 'layouts/dashboard.base.html' %}
 {% block title %}Flaskdesk — Dashboard{% endblock %}
 {% block content %}
@@ -8,6 +9,8 @@
   <div class="content-box mb-3 content-lighten">
     <h3>Dashboard</h3>
   </div>
+
+  {{ dashboard_cards(open|length, resolved|length, pending|length, closed|length) }}
 </div>
 
 {% endblock %}

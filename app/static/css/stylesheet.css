@@ -449,3 +449,34 @@ body {
 .nanobar .bar {
   background-color: #e8eaec;
 }
+
+/* Dashboard cards */
+.card-counter {
+  background-color: #ffffff;
+  height: 100px;
+  border-radius: 5px;
+  transition: 0.3s linear all;
+}
+
+.card-counter:hover {
+  box-shadow: 1px 1px 6px #dadada;
+  transition: 0.3s linear all;
+}
+
+.card-counter .count-numbers {
+  position: absolute;
+  right: 35px;
+  top: 20px;
+  font-size: 24px;
+  display: block;
+}
+
+.card-counter .count-name {
+  position: absolute;
+  right: 35px;
+  top: 65px;
+  text-transform: capitalize;
+  opacity: 0.5;
+  display: block;
+  font-size: 16px;
+}

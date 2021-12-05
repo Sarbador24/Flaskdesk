@@ -1,0 +1,28 @@
+{% macro dashboard_cards(open, resolved, pending, closed) %}
+<div class="row">
+  <div class="col-md-3 mb-2">
+    <div class="card-counter">
+      <span class="count-numbers">{{ open }}</span>
+      <span class="count-name">Open</span>
+    </div>
+  </div>
+  <div class="col-md-3 mb-2">
+    <div class="card-counter">
+      <span class="count-numbers">{{ resolved }}</span>
+      <span class="count-name">Resolved</span>
+    </div>
+  </div>
+  <div class="col-md-3 mb-2">
+    <div class="card-counter">
+      <span class="count-numbers">{{ pending }}</span>
+      <span class="count-name">Pending</span>
+    </div>
+  </div>
+  <div class="col-md-3">
+    <div class="card-counter">
+      <span class="count-numbers">{{ closed }}</span>
+      <span class="count-name">Closed</span>
+    </div>
+  </div>
+</div>
+{% endmacro %}

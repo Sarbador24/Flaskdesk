@@ -12,7 +12,12 @@ admin_blueprint = Blueprint('admin', __name__)
 @admin_blueprint.route('/dashboard')
 @login_required(role='admin')
 def dashboard():
-	return render_template('admin/dashboard.html')
+	open = Ticket.query.filter_by(owner_id=current_user.id).filter_by(status_id=1).all()
+	resolved = Ticket.query.filter_by(owner_id=current_user.id).filter_by(status_id=2).all()
+	pending = Ticket.query.filter_by(owner_id=current_user.id).filter_by(status_id=3).all()
+	closed = Ticket.query.filter_by(owner_id=current_user.id).filter_by(status_id=4).all()
+	
+	return render_template('admin/dashboard.html', open=open, resolved=resolved, pending=pending, closed=closed)
 
 @admin_blueprint.route('/tickets', methods=['GET', 'POST'])
 @login_required(role='admin')

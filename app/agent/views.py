@@ -12,7 +12,12 @@ agent_blueprint = Blueprint('agent', __name__)
 @agent_blueprint.route('/dashboard')
 @login_required(role='agent')
 def dashboard():
-	return render_template('agent/dashboard.html')
+	open = Ticket.query.filter_by(owner_id=current_user.id).filter_by(status_id=1).all()
+	resolved = Ticket.query.filter_by(owner_id=current_user.id).filter_by(status_id=2).all()
+	pending = Ticket.query.filter_by(owner_id=current_user.id).filter_by(status_id=3).all()
+	closed = Ticket.query.filter_by(owner_id=current_user.id).filter_by(status_id=4).all()
+	
+	return render_template('agent/dashboard.html', open=open, resolved=resolved, pending=pending, closed=closed)
 
 @agent_blueprint.route('/tickets', methods=['GET', 'POST'])
 @login_required(role='agent')
