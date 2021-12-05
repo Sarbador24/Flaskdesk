@@ -47,7 +47,11 @@ def ticket():
 @login_required(role='agent')
 def update_ticket(id, public_id):
 	users = User.query.filter(or_(User.role=='admin', User.role=='agent')).all()
-	ticket = Ticket.query.filter_by(id=id)
+	ticket = Ticket.query.filter_by(id=id, public_id=public_id)
+	
+	category = 0
+	priority = 0
+	status = 0
 	for i in ticket:
 		category = i.category_id
 		priority = i.priority_id
@@ -87,7 +91,7 @@ def delete_ticket(id):
 @agent_blueprint.route('/ticket/comments/<int:id>/<public_id>', methods=['GET', 'POST'])
 @login_required(role='agent')
 def comment(id, public_id):
-	ticket = Ticket.query.filter_by(id=id)
+	ticket = Ticket.query.filter_by(id=id, public_id=public_id)
 	comments = Comment.query.filter(Comment.ticket_id == id).all()
 	if request.method == 'POST':
 		comment = request.form['comment']
