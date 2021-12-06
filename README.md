@@ -1,7 +1,5 @@
 # Flaskdesk
 
-![Flaskdesk](app/static/images/flaskdesk.png)
-
 Flaskdesk is a support ticketing system that helps you manage customer inquiries. It also provides all the context you need to resolve issues and allows you to categorize, prioritize, and assign customer tickets.
 
 ## Prerequisites
