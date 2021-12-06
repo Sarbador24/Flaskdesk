@@ -2,8 +2,8 @@ import os
 
 class BaseConfig(object):
 	DEBUG = False
-	SECRET_KEY = os.environ.get('SECRET_KEY')
-	SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://admin:admin@localhost/flaskdesk'
+	SECRET_KEY = 'never-commit-secret-key-to-github'
+	SQLALCHEMY_DATABASE_URI = 'sqlite:///database.db'
 	SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 	MAIL_SERVER = 'smtp.googlemail.com'
